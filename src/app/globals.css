@@ -1,0 +1,354 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #081319;
+  --bg-raised: #0E1B22;
+  --bg-raised-hover: #10222B;
+  --text: #E9EEF1;
+  --muted: #7E8B93;
+  --muted-dim: #4A5860;
+  --signal: #4FC1E9;
+  --signal-deep: #2E86C1;
+  --amber: #F5A623;
+  --danger: #E5484D;
+  --line: #1B2830;
+  --line-strong: #29394352;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-sans: 'Inter', ui-sans-serif, sans-serif;
+  /* Display face for headlines only — the primary hierarchy tool in this
+     system. Mono is now reserved for technical metadata/labels/numbers,
+     never for headings, matching the "typography over borders" direction. */
+  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, sans-serif;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-muted-dim: var(--muted-dim);
+  --color-signal: var(--signal);
+  --color-signal-deep: var(--signal-deep);
+  --color-amber: var(--amber);
+  --color-danger: var(--danger);
+  --color-line: var(--line);
+  --font-mono: var(--font-mono);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+}
+
+/* Layered (not plain unlayered CSS) so Tailwind's utility layer — which
+   loads after base — still wins the cascade over these resets/components,
+   regardless of selector specificity. */
+@layer base {
+  *{margin:0;padding:0;box-sizing:border-box;}
+  /* overflow-x:hidden lives on body only, not html — setting it on BOTH
+     forces overflow-y to computed "auto" on each (a CSS Overflow spec rule:
+     a mismatched overflow-x/overflow-y pair turns the "visible" one into
+     "auto"), which turns body into its own nested scroll container instead
+     of letting its overflow propagate to the viewport as normal. That
+     breaks position:sticky for every descendant — AssemblyHero's pinned
+     panel silently stopped sticking (rendered ~170px above the viewport
+     instead of pinning at top:0) the one time this had both. */
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* faint sitewide dot-grid so the flat navy always has some texture,
+     independent of the per-section color glows added on Home. */
+  .bg-grid{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:radial-gradient(circle, rgba(126,139,147,0.14) 1px, transparent 1px);
+    background-size:32px 32px;
+    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 90%);
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 90%);
+  }
+
+  /* Coordinate-line backdrop for section-level structure (hero, final CTA):
+     sparse hairlines rather than dots, reading as a technical drafting grid
+     instead of decoration. Used deliberately on a handful of sections, not
+     sitewide — see §10 of the redesign brief on restraint. */
+  .coord-grid{
+    position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background-image:
+      linear-gradient(90deg, var(--line) 1px, transparent 1px),
+      linear-gradient(180deg, var(--line) 1px, transparent 1px);
+    background-size:120px 120px;
+    opacity:0.5;
+    -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 15%, #000 75%, transparent 100%);
+    mask-image:linear-gradient(180deg, transparent 0%, #000 15%, #000 75%, transparent 100%);
+  }
+
+  /* Small corner tick marks that read as technical annotation on a bounded
+     region (a project row, the pipeline capsule). Applied via the four
+     ::before/::after-driven corners on `.ticked`. */
+  .ticked{position:relative;}
+  .ticked::before, .ticked::after{
+    content:"";position:absolute;width:9px;height:9px;pointer-events:none;
+    border-color:var(--muted-dim);opacity:0.6;
+  }
+  .ticked::before{top:-1px;left:-1px;border-top:1px solid;border-left:1px solid;}
+  .ticked::after{bottom:-1px;right:-1px;border-bottom:1px solid;border-right:1px solid;}
+  ::selection{background:var(--signal);color:#081319;}
+  a{color:inherit;text-decoration:none;}
+
+  :focus-visible{
+    outline:2px solid var(--signal);
+    outline-offset:2px;
+    border-radius:2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+}
+
+@layer components {
+  /* ambient color glows: absolutely positioned, blurred, behind section content.
+     Colors are drawn only from the existing brand tokens (signal / signal-deep / amber)
+     so this adds visual variety without introducing off-brand hues. */
+  .glow{position:absolute;border-radius:9999px;pointer-events:none;filter:blur(64px);z-index:-1;}
+  .glow-signal{background:radial-gradient(circle, var(--signal) 0%, transparent 70%);opacity:0.26;}
+  .glow-deep{background:radial-gradient(circle, var(--signal-deep) 0%, transparent 70%);opacity:0.32;}
+  .glow-amber{background:radial-gradient(circle, var(--amber) 0%, transparent 70%);opacity:0.22;}
+
+  /* hero backdrop photo: covers the hero + "how it comes together" scroll
+     section together (its parent is the shared isolate wrapper spanning both
+     in page.tsx), sitting behind the glows (-2 vs their -1) and heavily
+     darkened + blurred so it reads as ambient AI-command-center texture, not
+     a legible competing image — the mock dashboard labels in the source photo
+     are intentionally illegible here. Plain (non-fixed) background-size:cover
+     stretches one continuous image across the full combined height; the
+     gradient fades it to solid --bg well before the end so it blends into
+     the "Deployed" section below. (background-attachment:fixed was tried
+     here but breaks the blur filter on this tall a stitched section in
+     Chromium — the raw, sharp photo bled through — so plain scroll wins.) */
+  .hero-bg-photo{
+    position:absolute;inset:0;z-index:-2;pointer-events:none;
+    background-image:
+      linear-gradient(180deg, rgba(8,19,25,0.82) 0%, rgba(8,19,25,0.68) 20%, rgba(8,19,25,0.74) 45%, rgba(8,19,25,0.88) 75%, var(--bg) 100%),
+      radial-gradient(ellipse 75% 55% at 50% 8%, rgba(8,19,25,0.45) 0%, rgba(8,19,25,0.88) 70%),
+      url('/brand/bg.jpg');
+    background-size:cover;
+    background-position:center 15%;
+    background-repeat:no-repeat;
+    filter:blur(3px) saturate(1.05);
+    opacity:0.5;
+    mask-image:linear-gradient(180deg, black 0%, black 82%, transparent 100%);
+    -webkit-mask-image:linear-gradient(180deg, black 0%, black 82%, transparent 100%);
+  }
+
+  /* keeps the floating nav pill clear of a notch/dynamic-island/status-bar
+     cutout on devices that report a safe-area-inset, in addition to its
+     normal top gap. */
+  .nav-offset{top:max(1rem, env(safe-area-inset-top));}
+  @media(min-width:640px){.nav-offset{top:max(1.5rem, env(safe-area-inset-top));}}
+
+  .container{max-width:1080px;margin:0 auto;padding:0 40px;}
+  @media(max-width:900px){.container{padding:0 32px;}}
+  @media(max-width:640px){.container{padding:0 20px;}}
+
+  /* Editorial section header: a left-aligned oversized index number sitting
+     beside a display-face title, closing with one full-width hairline
+     underneath. Replaces the old centered "── 01 · Title ──" mono divider,
+     which read as a UI-chrome device; this reads as a page/chapter marker,
+     the way a technical publication numbers its sections. */
+  .section-head{
+    display:flex;align-items:flex-end;gap:20px;
+    margin-bottom:56px;padding-bottom:20px;
+    border-bottom:1px solid var(--line);
+  }
+  .section-head .section-tag{
+    font-family:var(--font-mono);font-size:clamp(28px,5vw,44px);font-weight:600;
+    line-height:1;color:var(--line-strong);flex:none;
+  }
+  .section-head .section-title{
+    font-family:var(--font-display);font-weight:600;letter-spacing:-0.01em;
+    font-size:clamp(22px,3.6vw,34px);line-height:1.1;
+  }
+
+  /* Display headline utility — the primary hierarchy tool across the site.
+     Tight leading + negative tracking at large sizes, since Space Grotesk
+     opens up noticeably at display scale without it. */
+  .display{
+    font-family:var(--font-display);
+    font-weight:600;
+    letter-spacing:-0.02em;
+    line-height:1.02;
+  }
+
+  /* Full-bleed content row: the default structural unit replacing `.panel`
+     for most content. A hairline top border and generous vertical padding
+     do the work a bordered rounded box used to, without every piece of
+     content on the page reading as "a card." */
+  .row{border-top:1px solid var(--line);}
+  .row:last-child{border-bottom:1px solid var(--line);}
+
+  /* Oversized, low-opacity numeral used for wayfinding behind or beside
+     section content (see the redesign brief's "large numbers" technique).
+     Never load-bearing for meaning on its own — always paired with a real
+     label — so it stays out of the accessibility tree. */
+  .ghost-num{
+    font-family:var(--font-display);font-weight:700;
+    color:var(--line-strong);
+    line-height:0.85;letter-spacing:-0.04em;
+    pointer-events:none;user-select:none;
+  }
+
+  /* Small technical annotation label: the mono "metadata" register used for
+     numbers, statuses, and system-y asides now that headings have moved to
+     the display face. */
+  .annotation{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;
+    color:var(--muted-dim);text-transform:uppercase;
+  }
+
+  /* card primitives shared across log entries / cap cards / project cards */
+  .card-reveal{
+    opacity:0;transform:translateY(16px);
+    transition:opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease, background 0.2s ease;
+  }
+  .card-reveal.visible{opacity:1;transform:translateY(0);}
+
+  /* Radius scale (documented, applied consistently rather than per-component
+     guessing): 3px for controls (buttons, inputs, tags), 8px for larger
+     elevated containers (nav shell, modals/lightboxes, the small set of
+     surfaces that still use `.panel`), full-pill only for small interactive
+     filter/status chips (stack badges, testimonial selector pills). Rows,
+     section frames, and project blocks stay sharp (0) — see `.row` above. */
+  .panel{
+    position:relative;overflow:hidden;
+    border:1px solid var(--line);border-radius:8px;
+    background:var(--bg-raised);
+    transition:border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  }
+  .panel:hover{
+    border-color:var(--signal);background:var(--bg-raised-hover);
+    box-shadow:0 12px 24px -12px rgba(79,193,233,0.2);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .panel{transition:border-color 0.2s ease, background 0.2s ease;}
+  }
+
+  /* cursor-reactive glow: --mx/--my set via onMouseMove in useGlow() */
+  .panel-shine{
+    position:absolute;inset:0;pointer-events:none;
+    opacity:0;transition:opacity 0.3s ease;
+    background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%), rgba(79,193,233,0.16), transparent 70%);
+  }
+  .panel:hover .panel-shine{opacity:1;}
+
+  .stack-badge{transition:border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;}
+  .stack-badge:hover{
+    border-color:var(--signal);
+    transform:translateY(-2px);
+    box-shadow:0 6px 14px -8px rgba(79,193,233,0.35);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .stack-badge:hover{transform:none;}
+  }
+
+  /* section jump-rail: a single dot column, fixed on the side, on every
+     screen size — labels are added back in (as a Tailwind `hidden 2xl:…`
+     class on the label span itself) only once the viewport is wide enough
+     that a revealed label can never reach into the centered container's
+     content. Padding+negative-margin enlarges the tap target without
+     changing the visual gap between dots. */
+  .rail-item{display:flex;align-items:center;gap:10px;cursor:pointer;padding:9px;margin:-9px;}
+  .rail-dot{width:6px;height:6px;border-radius:50%;background:var(--line);flex:none;
+    transition:background 0.3s ease, box-shadow 0.3s ease;}
+  .rail-item.active .rail-dot{background:var(--signal);box-shadow:0 0 6px var(--signal);}
+  .rail-label{font-family:var(--font-mono);font-size:10.5px;color:var(--muted-dim);
+    letter-spacing:0.3px;white-space:nowrap;opacity:0;transform:translateX(-4px);
+    transition:opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;}
+  .rail-item:hover .rail-label{opacity:1;transform:translateX(0);}
+  .rail-item.active .rail-label{opacity:1;transform:translateX(0);color:var(--text);}
+
+  @media (prefers-reduced-motion: reduce){
+    .rail-dot, .rail-label{transition:none;}
+  }
+
+  .btn{
+    font-family:var(--font-mono);font-size:13px;padding:14px 24px;
+    border-radius:3px;letter-spacing:0.3px;
+    transition:all 0.2s ease;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{position:relative;overflow:hidden;background:var(--signal);color:#081319;font-weight:600;}
+  .btn-primary:hover{box-shadow:0 0 20px rgba(79,193,233,0.4);transform:translateY(-1px);}
+  .btn-ghost{border:1px solid var(--line);color:var(--muted);}
+  .btn-ghost:hover{border-color:var(--muted);color:var(--text);}
+
+  /* cursor-reactive glossy sheen for the bright primary button (--mx/--my via useGlow()) */
+  .btn-shine{
+    position:absolute;inset:0;pointer-events:none;
+    opacity:0;transition:opacity 0.3s ease;
+    background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.35), transparent 70%);
+  }
+  .btn-primary:hover .btn-shine{opacity:1;}
+
+  /* button-in-button trailing icon: nested circle that shifts on hover */
+  .btn-icon-circle{
+    position:relative;
+    display:inline-flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border-radius:9999px;flex:none;
+    background:rgba(8,19,25,0.14);
+    transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease;
+  }
+  .btn-primary:hover .btn-icon-circle{
+    transform:translateX(3px);
+    background:rgba(8,19,25,0.22);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .btn-icon-circle{transition:background 0.2s ease;}
+    .btn-primary:hover .btn-icon-circle{transform:none;}
+  }
+
+  .eyebrow{
+    font-family:var(--font-mono);font-size:12px;color:var(--muted);
+    letter-spacing:1px;margin-bottom:24px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--signal);
+    box-shadow:0 0 6px var(--signal);animation:pulse 2s infinite;}
+
+  @media (prefers-reduced-motion: reduce){
+    .eyebrow .dot{animation:none;}
+  }
+
+  /* custom tech cursor: html.custom-cursor-active is only ever set on
+     fine-pointer, non-reduced-motion devices (see CustomCursor.tsx), so a
+     touch/keyboard/reduced-motion visitor never loses their native cursor. */
+  .custom-cursor-active, .custom-cursor-active *{cursor:none !important;}
+  .cursor-dot{
+    position:fixed;top:0;left:0;width:6px;height:6px;margin:-3px 0 0 -3px;
+    border-radius:50%;background:var(--signal);
+    pointer-events:none;z-index:9999;will-change:transform;
+    transition:opacity 0.15s ease;
+  }
+  .cursor-ring{
+    position:fixed;top:0;left:0;width:30px;height:30px;margin:-15px 0 0 -15px;
+    border-radius:50%;border:1px solid var(--signal);
+    pointer-events:none;z-index:9998;will-change:transform;
+    display:flex;align-items:center;justify-content:center;
+    transition:width 0.2s ease, height 0.2s ease, margin 0.2s ease, border-color 0.2s ease, opacity 0.15s ease;
+  }
+  .cursor-ring.cursor-hover{
+    width:46px;height:46px;margin:-23px 0 0 -23px;
+    border-color:var(--amber);background:rgba(79,193,233,0.06);
+  }
+  .cursor-hidden{opacity:0;}
+  .cursor-crosshair{position:absolute;background:var(--signal);opacity:0;transition:opacity 0.2s ease;}
+  .cursor-crosshair-h{width:9px;height:1px;}
+  .cursor-crosshair-v{width:1px;height:9px;}
+  .cursor-ring.cursor-hover .cursor-crosshair{opacity:0.7;background:var(--amber);}
+}
+
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
