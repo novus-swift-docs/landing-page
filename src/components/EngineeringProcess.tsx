@@ -1,8 +1,34 @@
 import { engineeringProcess } from "@/lib/data";
 import IconGlyph from "@/components/IconGlyph";
 import { Reveal } from "@/components/Reveal";
+import StageRail from "@/components/StageRail";
 
-export default function EngineeringProcess() {
+/**
+ * `compact` renders the homepage's "How it gets built" trust signal using
+ * the same numbered-stage/connector-rail presentation as "How we think"
+ * (PipelineViz, on /about) — both are built on the shared StageRail
+ * component — rather than a flat icon-chip row, so the two "how we work"
+ * moments on the site read as one consistent visual language instead of two
+ * different treatments for the same kind of content. The full six-stage
+ * walkthrough (used on /about) keeps its own detailed per-stage body copy in
+ * two full sentences, for the visitor who's already decided to learn how the
+ * studio actually works.
+ */
+export default function EngineeringProcess({ compact = false }: { compact?: boolean }) {
+  if (compact) {
+    const stages = engineeringProcess.map((step) => ({
+      key: step.slug,
+      label: step.label,
+      icon: step.icon,
+      body: `${step.title}. ${step.body}`,
+    }));
+    return (
+      <Reveal>
+        <StageRail stages={stages} trackLabel="engineering-process-compact-stage" />
+      </Reveal>
+    );
+  }
+
   return (
     <div>
       {/* Mobile: vertical timeline with a connecting rail on the left. */}
@@ -24,7 +50,7 @@ export default function EngineeringProcess() {
                   {String(i + 1).padStart(2, "0")} / {step.label.toUpperCase()}
                 </div>
                 <div className="font-display font-semibold text-[16px] mb-1.5">{step.title}</div>
-                <p className="text-[13.5px] leading-relaxed" style={{ color: "var(--muted)" }}>
+                <p className="text-[14px] leading-relaxed" style={{ color: "var(--muted)" }}>
                   {step.body}
                 </p>
               </div>
@@ -53,8 +79,8 @@ export default function EngineeringProcess() {
                 <div className="annotation mb-1.5" style={{ color: "var(--signal)" }}>
                   {String(i + 1).padStart(2, "0")}
                 </div>
-                <div className="font-display font-semibold text-[14.5px] lg:text-[15.5px] mb-2 leading-tight">{step.title}</div>
-                <p className="text-[12.5px] lg:text-[13px] leading-relaxed" style={{ color: "var(--muted)" }}>
+                <div className="font-display font-semibold text-[15px] lg:text-[16px] mb-2 leading-tight">{step.title}</div>
+                <p className="text-[13px] leading-relaxed" style={{ color: "var(--muted)" }}>
                   {step.body}
                 </p>
               </div>

@@ -17,18 +17,11 @@ export type Testimonial = {
   disclosure: string;
 };
 
+// Ordered to match the Projects page (src/lib/data.ts, visibleProjects):
+// SwiftDocs, CloudDesk, HOS Trip Planner, SoleVault, Sales Intelligence,
+// then the testimonials with no public project entry, in their existing
+// relative order (they have no rank in that hierarchy to match).
 export const testimonials: Testimonial[] = [
-  {
-    slug: "clouddesk",
-    projectSlug: "clouddesk",
-    project: "CloudDesk",
-    category: "Support Intelligence Platform",
-    quote:
-      "Cloudesk took a lot of the manual work out of ticket triage, so our agents could spend more of their time actually helping customers.",
-    attribution: "Daniel",
-    role: "Support Operations",
-    disclosure: "Anonymized client feedback",
-  },
   {
     slug: "swiftdocs",
     projectSlug: "swiftdocs",
@@ -41,34 +34,14 @@ export const testimonials: Testimonial[] = [
     disclosure: "Anonymized client feedback",
   },
   {
-    slug: "dental-booking",
-    project: "Dental Booking Project",
-    category: "Dental / Healthcare Booking",
+    slug: "clouddesk",
+    projectSlug: "clouddesk",
+    project: "CloudDesk",
+    category: "Support Intelligence Platform",
     quote:
-      "This gave our patients an easy way to explore our services and book appointments online, which noticeably reduced the number of scheduling calls coming into the front desk.",
-    attribution: "Sophie",
-    role: "Practice Operations",
-    disclosure: "Anonymized client feedback",
-  },
-  {
-    slug: "solevault",
-    projectSlug: "solevault",
-    project: "SoleVault",
-    category: "E-commerce Platform",
-    quote:
-      "Through this our products got the level of visual polish our brand needed, and we noticed customers spending more time exploring the catalog before making a purchase.",
-    attribution: "Ethan",
-    role: "E-commerce Operations",
-    disclosure: "Anonymized client feedback",
-  },
-  {
-    slug: "studio-verai",
-    project: "Studio Verai",
-    category: "Interior Design / Professional Services",
-    quote:
-      "The website made it much easier for prospective clients to see our completed work and reach out directly, rather than relying mainly on social media and word of mouth.",
-    attribution: "Amelia",
-    role: "Creative Studio",
+      "Cloudesk took a lot of the manual work out of ticket triage, so our agents could spend more of their time actually helping customers.",
+    attribution: "Daniel",
+    role: "Support Operations",
     disclosure: "Anonymized client feedback",
   },
   {
@@ -83,6 +56,48 @@ export const testimonials: Testimonial[] = [
     disclosure: "Anonymized client feedback",
   },
   {
+    slug: "solevault",
+    projectSlug: "solevault",
+    project: "SoleVault",
+    category: "E-commerce Platform",
+    quote:
+      "Through this our products got the level of visual polish our brand needed, and we noticed customers spending more time exploring the catalog before making a purchase.",
+    attribution: "Ethan",
+    role: "E-commerce Operations",
+    disclosure: "Anonymized client feedback",
+  },
+  {
+    slug: "sales-intelligence",
+    projectSlug: "sales-intelligence",
+    project: "Sales Intelligence",
+    category: "Revenue Analytics Platform",
+    quote:
+      "The tool gave our sales team a much clearer view of what was driving revenue, with dashboards and forecasting that helped us plan ahead with more confidence.",
+    attribution: "Grace",
+    role: "Revenue Operations",
+    disclosure: "Anonymized client feedback",
+  },
+  {
+    slug: "dental-booking",
+    project: "Dental Booking Project",
+    category: "Dental / Healthcare Booking",
+    quote:
+      "This gave our patients an easy way to explore our services and book appointments online, which noticeably reduced the number of scheduling calls coming into the front desk.",
+    attribution: "Sophie",
+    role: "Practice Operations",
+    disclosure: "Anonymized client feedback",
+  },
+  {
+    slug: "studio-verai",
+    project: "Studio Verai",
+    category: "Interior Design / Professional Services",
+    quote:
+      "The website made it much easier for prospective clients to see our completed work and reach out directly, rather than relying mainly on social media and word of mouth.",
+    attribution: "Amelia",
+    role: "Creative Studio",
+    disclosure: "Anonymized client feedback",
+  },
+  {
     slug: "crown-craft",
     projectSlug: "crown-craft",
     project: "Crown & Craft",
@@ -91,17 +106,6 @@ export const testimonials: Testimonial[] = [
       "It gave customers a clear view of our services and pricing before they called, while making it possible for them to book directly online instead of picking up the phone.",
     attribution: "Jordan",
     role: "Barbershop Operations",
-    disclosure: "Anonymized client feedback · adapted to protect identity",
-  },
-  {
-    slug: "sales-intelligence",
-    projectSlug: "sales-intelligence",
-    project: "Sales Intelligence",
-    category: "Revenue Analytics Platform",
-    quote:
-      "The tool became a key benefit for our sales team in getting a much clearer view of what was driving revenue, with interactive dashboards, product-level insights, and forecasting that helped us spot trends and plan ahead with more confidence.",
-    attribution: "Grace",
-    role: "Revenue Operations",
-    disclosure: "Anonymized client feedback",
+    disclosure: "Anonymized client feedback, adapted to protect identity",
   },
 ];

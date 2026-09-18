@@ -60,13 +60,17 @@ export default function CustomCursor() {
 
     function onOver(e: PointerEvent) {
       const target = e.target as HTMLElement | null;
-      if (target?.closest('a, button, [role="button"], input, textarea, select')) {
+      // `.rail-item` excluded deliberately: the section jump-rail's dots are
+      // tiny (6px, with a padded hit area), and the crosshair-reticle hover
+      // state, sized for real buttons and links, read as an oversized plus
+      // sign floating over them rather than a meaningful hover cue.
+      if (target?.closest('a, button, [role="button"], input, textarea, select') && !target?.closest(".rail-item")) {
         ringRef.current?.classList.add("cursor-hover");
       }
     }
     function onOut(e: PointerEvent) {
       const target = e.target as HTMLElement | null;
-      if (target?.closest('a, button, [role="button"], input, textarea, select')) {
+      if (target?.closest('a, button, [role="button"], input, textarea, select') && !target?.closest(".rail-item")) {
         ringRef.current?.classList.remove("cursor-hover");
       }
     }

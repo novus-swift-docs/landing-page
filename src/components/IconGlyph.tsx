@@ -23,6 +23,7 @@ import {
   CheckCircle,
   WarningCircle,
   X,
+  CaretDown,
   type IconProps,
 } from "@phosphor-icons/react";
 import type { IconName } from "@/lib/iconMap";
@@ -50,6 +51,7 @@ const REGISTRY = {
   CheckCircle,
   WarningCircle,
   X,
+  CaretDown,
 } as const;
 
 export default function IconGlyph({ name, ...props }: { name: IconName } & IconProps) {

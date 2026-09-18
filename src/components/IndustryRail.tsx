@@ -27,7 +27,7 @@ export default function IndustryRail() {
           scrollbar renders for it even though nothing here overflows
           vertically. Same root cause documented in globals.css. */}
       <div
-        className="flex gap-0 overflow-x-auto overflow-y-hidden sm:flex-wrap border-b"
+        className="flex gap-0 overflow-x-auto overflow-y-hidden sm:flex-wrap sm:justify-between border-b"
         style={{ borderColor: "var(--line)", scrollSnapType: "x proximity" }}
       >
         {industrySolutions.map((ind, i) => (

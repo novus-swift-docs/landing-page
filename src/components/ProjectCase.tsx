@@ -5,9 +5,10 @@ import { STATUS_LABEL, type Project } from "@/lib/data";
 import { Reveal } from "@/components/Reveal";
 import ScreenshotGallery from "@/components/ScreenshotGallery";
 import IconGlyph from "@/components/IconGlyph";
+import StatCounter from "@/components/StatCounter";
 import { trackEvent } from "@/lib/analytics";
 
-const STATUS_ICON = { LIVE_DEMO: "✓", LINKEDIN: "in", SHOWCASE: "◆" } as const;
+const STATUS_ICON = { LIVE_DEMO: "✓", LINKEDIN: "in", SHOWCASE: "◆", IN_PROGRESS: "…" } as const;
 
 export default function ProjectCase({ project, index }: { project: Project; index: number }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -39,18 +40,27 @@ export default function ProjectCase({ project, index }: { project: Project; inde
               <span className="annotation" style={{ color: "var(--signal)" }}>
                 [{STATUS_ICON[project.status]}] {STATUS_LABEL[project.status]}
               </span>
-              <span className="annotation">{project.category}</span>
+              {/* Sentence case: long category names in all-caps (e.g. "Market
+                  Intelligence Platform") read as noisy rather than as a label
+                  (usability audit finding). Uppercase stays reserved for the
+                  short fixed status text to its left. */}
+              <span className="font-mono text-[13px]" style={{ color: "var(--muted-dim)" }}>
+                {project.category}
+              </span>
             </div>
 
             <h2 className="display font-semibold mb-4" style={{ fontSize: "clamp(24px,4vw,40px)" }}>
               {project.name}
             </h2>
-            <p className="text-[15.5px] sm:text-[16px] mb-4" style={{ color: "var(--muted)" }}>
+            <p className="text-[16px] mb-4" style={{ color: "var(--muted)" }}>
               {project.description}
             </p>
 
+            {project.demoHint && (
+              <p className="font-mono text-[13px] mb-5" style={{ color: "var(--signal)" }}>{project.demoHint}</p>
+            )}
             {project.confidentialityNote && (
-              <p className="annotation italic normal-case mb-5">{project.confidentialityNote}</p>
+              <p className="font-mono text-[13px] mb-5" style={{ color: "var(--muted-dim)", fontStyle: "italic" }}>{project.confidentialityNote}</p>
             )}
 
         <div className="flex gap-3 flex-wrap mb-7">
@@ -92,7 +102,7 @@ export default function ProjectCase({ project, index }: { project: Project; inde
                 <span style={{ color: "var(--muted-dim)" }} className="mr-1.5">
                   {m.label}
                 </span>
-                <strong style={{ color: "var(--amber)" }}>{m.value}</strong>
+                <strong style={{ color: "var(--amber)" }}><StatCounter value={m.value} /></strong>
               </div>
             ))}
           </div>
@@ -104,7 +114,7 @@ export default function ProjectCase({ project, index }: { project: Project; inde
             {project.stack.map((s, i) => (
               <span
                 key={s}
-                className="stack-badge font-mono text-[11.5px] pl-2.5 pr-3.5 py-1.5 rounded-full border flex items-center justify-center gap-2"
+                className="stack-badge font-mono text-[12px] pl-2.5 pr-3.5 py-1.5 rounded-full border flex items-center justify-center gap-2"
                 style={{
                   borderColor: "var(--line)",
                   background: "linear-gradient(155deg, var(--bg-raised), var(--bg))",
@@ -130,7 +140,7 @@ export default function ProjectCase({ project, index }: { project: Project; inde
 
         <div className="flex flex-col gap-3.5">
           {project.details.map((d, i) => (
-            <p key={i} className="text-[14.5px] leading-relaxed" style={{ color: "var(--muted)" }}>
+            <p key={i} className="text-[15px] leading-relaxed" style={{ color: "var(--muted)" }}>
               <span style={{ color: "var(--signal)" }} className="font-mono mr-2">
                 →
               </span>

@@ -20,7 +20,8 @@ export type IconName =
   | "ArrowsClockwise"
   | "CheckCircle"
   | "WarningCircle"
-  | "X";
+  | "X"
+  | "CaretDown";
 
 export const CATEGORY_ICON: Record<string, IconName> = {
   "automation-agents": "Robot",

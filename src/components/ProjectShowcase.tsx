@@ -5,7 +5,10 @@ import { useEffect, useRef } from "react";
 import { STATUS_LABEL, type Project } from "@/lib/data";
 import { Reveal } from "@/components/Reveal";
 import IconGlyph from "@/components/IconGlyph";
+import StatCounter from "@/components/StatCounter";
 import { trackEvent } from "@/lib/analytics";
+
+const STATUS_ICON = { LIVE_DEMO: "✓", LINKEDIN: "in", SHOWCASE: "◆", IN_PROGRESS: "…" } as const;
 
 function ShowcaseRow({ project, index }: { project: Project; index: number }) {
   const reversed = index % 2 === 1;
@@ -33,7 +36,15 @@ function ShowcaseRow({ project, index }: { project: Project; index: number }) {
     <section ref={sectionRef} id={project.slug} className="row py-14 sm:py-20" style={{ scrollMarginTop: 100 }}>
       <div className={`grid lg:grid-cols-2 gap-8 lg:gap-16 items-center ${reversed ? "lg:[&>*:first-child]:order-2" : ""}`}>
         <Reveal>
-          <div className="ticked border overflow-hidden" style={{ borderColor: "var(--line)", borderRadius: 6, aspectRatio: "16/10", background: "var(--bg-raised)" }}>
+          <div
+            className="ticked border overflow-hidden"
+            style={{
+              borderColor: "var(--line)",
+              borderRadius: 8,
+              aspectRatio: "16/10",
+              background: "var(--bg-raised)",
+            }}
+          >
             {heroAsset ? (
               <Image
                 src={`${project.assetDir}/${heroAsset}`}
@@ -55,13 +66,20 @@ function ShowcaseRow({ project, index }: { project: Project; index: number }) {
         <Reveal delay={0.08}>
           <div className="flex items-center gap-3 mb-4">
             <span className="annotation" style={{ color: "var(--signal)" }}>
-              [{project.status === "LIVE_DEMO" ? "✓" : project.status === "LINKEDIN" ? "in" : "◆"}] {STATUS_LABEL[project.status]}
+              [{STATUS_ICON[project.status]}] {STATUS_LABEL[project.status]}
             </span>
-            <span className="annotation">{project.category}</span>
+            {/* Sentence case, not `.annotation`'s uppercase: category names
+                like "Market Intelligence Platform" read as noisy, hard-to-scan
+                all-caps once they run past a couple of words (usability audit
+                finding) — uppercase stays reserved for the short fixed status
+                label to its left. */}
+            <span className="font-mono text-[13px]" style={{ color: "var(--muted-dim)" }}>
+              {project.category}
+            </span>
           </div>
 
           <h3 className="display font-semibold text-[clamp(28px,4.2vw,44px)] mb-4">{project.name}</h3>
-          <p className="text-[15.5px] sm:text-[16px] mb-6" style={{ color: "var(--muted)" }}>
+          <p className="text-[16px] mb-6" style={{ color: "var(--muted)" }}>
             {project.description}
           </p>
 
@@ -70,7 +88,7 @@ function ShowcaseRow({ project, index }: { project: Project; index: number }) {
               {project.metrics.slice(0, 3).map((m) => (
                 <div key={m.label}>
                   <div className="font-display font-semibold text-[22px]" style={{ color: "var(--signal)" }}>
-                    {m.value}
+                    <StatCounter value={m.value} />
                   </div>
                   <div className="annotation">{m.label}</div>
                 </div>
@@ -104,8 +122,13 @@ function ShowcaseRow({ project, index }: { project: Project; index: number }) {
               </a>
             )}
           </div>
+          {project.demoHint && (
+            <p className="font-mono text-[13px] mt-4" style={{ color: "var(--signal)" }}>
+              {project.demoHint}
+            </p>
+          )}
           {project.confidentialityNote && (
-            <p className="annotation mt-4 normal-case" style={{ fontStyle: "italic" }}>
+            <p className="font-mono text-[13px] mt-4" style={{ color: "var(--muted-dim)", fontStyle: "italic" }}>
               {project.confidentialityNote}
             </p>
           )}

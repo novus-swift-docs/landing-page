@@ -2,12 +2,13 @@ import type { IconName } from "@/lib/iconMap";
 
 export type Metric = { label: string; value: string };
 
-export type ProjectStatus = "LIVE_DEMO" | "LINKEDIN" | "SHOWCASE";
+export type ProjectStatus = "LIVE_DEMO" | "LINKEDIN" | "SHOWCASE" | "IN_PROGRESS";
 
 export const STATUS_LABEL: Record<ProjectStatus, string> = {
   LIVE_DEMO: "LIVE DEMO",
   LINKEDIN: "LINKEDIN",
   SHOWCASE: "SHOWCASE",
+  IN_PROGRESS: "IN PROGRESS",
 };
 
 export type Project = {
@@ -23,6 +24,8 @@ export type Project = {
   linkedinUrl?: string;
   /** Shown next to any public demo link: makes explicit that the client implementation is private. */
   confidentialityNote?: string;
+  /** Short clarifying line rendered beside the demo CTA — e.g. how to actually get into a login-gated live system. */
+  demoHint?: string;
   metrics: Metric[];
   stack: string[];
   assets: string[];
@@ -30,45 +33,40 @@ export type Project = {
   details: string[];
   /** Surfaced in the homepage "selected systems" teaser. */
   featured?: boolean;
+  /** Reserved for the eventual paid-client flagship — largest visual weight once real. */
+  flagship?: boolean;
+  /**
+   * Not rendered anywhere until flipped to false: the project is real (or
+   * real-in-progress) but has no public assets/metrics yet. Keeps the data
+   * model and every render site (homepage, /projects, services proof links)
+   * ready to feature it the moment real content exists, without inventing
+   * screenshots, numbers, or workflow details in the meantime.
+   */
+  hidden?: boolean;
 };
 
 export const projects: Project[] = [
+  // Flagship-in-waiting: the only paid client engagement, still in active
+  // delivery. Hidden until it has real screenshots, metrics and a workflow
+  // narrative — see the `hidden` field's doc comment above. Deliberately
+  // minimal: every field here is either structural (slug, status) or
+  // something already true today (category, one-line framing), never an
+  // invented number, screenshot, or client detail.
   {
-    slug: "clouddesk",
-    name: "CloudDesk",
-    category: "Support Intelligence Platform",
-    status: "LIVE_DEMO",
-    tagline: "AI support ticket classifier. Routes, tags, and drafts responses automatically.",
+    slug: "rent-tenant-system",
+    name: "Rent & Tenant System",
+    category: "Property & Tenant Operations",
+    status: "IN_PROGRESS",
+    flagship: true,
+    hidden: true,
+    tagline: "Rent tracking and tenant coordination, replacing a register and a WhatsApp group.",
     description:
-      "CloudDesk sorts and routes support tickets in under 2 seconds at 91% accuracy, using a fine-tuned NLP model rather than keyword rules. Built for high-volume support operations where manual triage is the actual bottleneck.",
-    publicUrl: "https://novus-labs-cloud-desk-frontend.vercel.app",
-    confidentialityNote: "Public demonstration; confidential client implementation omitted.",
-    featured: true,
-    metrics: [
-      { label: "classification/routing accuracy", value: "91%" },
-      { label: "avg response time", value: "<2s" },
-      { label: "intent categories", value: "7" },
-      { label: "response templates", value: "42" },
-    ],
-    stack: ["DistilBERT", "FastAPI", "Next.js", "Gemini AI"],
-    assetDir: "/assets/clouddesk",
-    assets: [
-      "login.png",
-      "queue-list.png",
-      "queue-kanban.png",
-      "ticket-detail.png",
-      "agents.png",
-      "process-page1.png",
-      "process-page2.png",
-      "templates.png",
-      "metrics.png",
-      "history.png",
-    ],
-    details: [
-      "Fine-tuned DistilBERT classifies each ticket into an intent category; a FastAPI service routes it to the right queue and drafts a first-pass reply for the agent to approve or edit.",
-      "Agents work from a kanban or list queue with per-ticket history and template-backed replies instead of blank-slate composition every time.",
-      "91% accuracy is measured against a labeled holdout set, not a best-case demo run.",
-    ],
+      "In active development for our first paid client engagement. A full case study, interface imagery, and real metrics publish once the system is live.",
+    metrics: [],
+    stack: [],
+    assetDir: "/assets/rent-tenant-system",
+    assets: [],
+    details: [],
   },
   {
     slug: "swiftdocs",
@@ -94,58 +92,61 @@ export const projects: Project[] = [
       "98% field-level accuracy is measured against manually verified documents, not the easiest cases.",
     ],
   },
+  // Nearly complete (expected within about a week of this change) but not yet
+  // launch-ready — no public reel/screenshots exist. Hidden for the same
+  // reason as the rent system: the slot and data shape exist now so
+  // activating it later is a one-line flip, not a redesign.
   {
-    slug: "sales-intelligence",
-    name: "Sales Intelligence",
-    category: "Revenue Analytics Platform",
-    status: "LINKEDIN",
-    tagline: "End-to-end analytics platform. Ask questions in plain English, get SQL-backed answers.",
-    description:
-      "Sales Intelligence forecasts revenue and segments customers into AI-driven behavioral personas across 1M+ rows of transactional data, built for teams moving from gut-feel targeting to data-driven prioritization.",
-    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7485029644459479040/",
-    metrics: [
-      { label: "processes", value: "1M+ rows" },
-      { label: "total revenue tracked", value: "PKR 1.6B+" },
-      { label: "orders analyzed", value: "395K+" },
-      { label: "query", value: "natural language to SQL" },
-    ],
-    stack: ["Next.js", "SQL warehouse", "forecasting models", "LLM query layer"],
-    assetDir: "/assets/salesintel",
-    assets: [
-      "Homepage.png",
-      "dashboard.png",
-      "Forecast.png",
-      "CustomerPersonas.png",
-      "AskYourData.png",
-      "dataset1.png",
-      "dataset2.png",
-    ],
-    details: [
-      "An executive dashboard surfaces revenue trend, order status, and category performance at a glance, backed by a real transactional dataset, not seeded demo data.",
-      "A forecasting module projects revenue forward from trend; a segmentation model clusters customers into behavioral personas the sales team can act on directly.",
-      "The 'Ask Your Data' layer translates plain-English questions into SQL, so a non-technical teammate can query the warehouse an analyst would.",
-    ],
+    slug: "ai-inbox-agent",
+    name: "AI Inbox Agent",
+    category: "Inbound Message Automation",
+    status: "IN_PROGRESS",
+    hidden: true,
+    tagline: "Answers and routes the repetitive inbound questions a team otherwise retypes all day.",
+    description: "In final development. A public demo and full case study publish at launch.",
+    metrics: [],
+    stack: [],
+    assetDir: "/assets/ai-inbox-agent",
+    assets: [],
+    details: [],
   },
   {
-    slug: "daraz-intelligence",
-    name: "Daraz Intelligence",
-    category: "Market Intelligence Platform",
-    status: "LINKEDIN",
-    tagline: "Tracks real-time pricing across e-commerce listings. Flags fake discounts.",
+    slug: "clouddesk",
+    name: "CloudDesk",
+    category: "Support Intelligence Platform",
+    status: "LIVE_DEMO",
+    tagline: "AI support ticket classifier. Routes, tags, and drafts responses automatically.",
     description:
-      "Daraz Intelligence is a real-time market analysis tool for e-commerce decision-making. It tracks pricing and listing behavior continuously and flags sellers manufacturing fake discounts.",
-    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7485600716301094912/",
+      "CloudDesk sorts and routes support tickets in under 2 seconds at 91% accuracy, using a fine-tuned NLP model rather than keyword rules. Built for high-volume support operations where manual triage is the actual bottleneck.",
+    publicUrl: "https://novus-labs-cloud-desk-frontend.vercel.app",
+    confidentialityNote: "Public demonstration; confidential client implementation omitted.",
+    demoHint: "Demo credentials auto-fill on the login screen: no signup, no waiting on us.",
+    featured: true,
     metrics: [
-      { label: "tracking", value: "600 products/day" },
-      { label: "caught", value: "47 sellers faking discounts" },
+      { label: "classification/routing accuracy", value: "91%" },
+      { label: "avg response time", value: "<2s" },
+      { label: "intent categories", value: "7" },
+      { label: "response templates", value: "42" },
     ],
-    stack: ["scraping pipeline", "price-history engine", "anomaly detection", "Next.js dashboard"],
-    assetDir: "/assets/daraz",
-    assets: ["home.png", "price_tracker.png", "deals_drops.png", "fake_detector.png", "ai_insights.png"],
+    stack: ["DistilBERT", "FastAPI", "Next.js", "Gemini AI"],
+    assetDir: "/assets/clouddesk",
+    assets: [
+      "login.png",
+      "queue-list.png",
+      "queue-kanban.png",
+      "ticket-detail.png",
+      "agents.png",
+      "process-page1.png",
+      "process-page2.png",
+      "templates.png",
+      "metrics.png",
+      "history.png",
+    ],
     details: [
-      "A continuous pipeline tracks listing prices per product over time, building a real price history instead of a single snapshot.",
-      "The fake-discount detector compares a listing's 'was' price against its tracked history, flagging discounts that were never real to begin with.",
-      "An AI insights layer surfaces drop patterns and anomalies across the catalog for a pricing team to act on.",
+      "Fine-tuned DistilBERT classifies each ticket into an intent category; a FastAPI service routes it to the right queue and drafts a first-pass reply for the agent to approve or edit.",
+      "Agents work from a kanban or list queue with per-ticket history and template-backed replies instead of blank-slate composition every time.",
+      "91% accuracy is measured against a labeled holdout set, not a best-case demo run.",
+      "The login screen ships its own demo-account buttons that auto-fill working credentials, so a visitor can authenticate into the real system, not just look at screenshots of one.",
     ],
   },
   {
@@ -219,6 +220,59 @@ export const projects: Project[] = [
       "FLIP-style grid reflow when filtering products, so surviving cards glide to their new position instead of hard-refreshing.",
       "Cart and checkout with real physicality: the product photo flies into the cart icon with a comet-tail, a genuine three-step checkout with self-drawing progress, and a fully custom CSS-3D packaging animation on confirmation.",
       "Framer Motion for anything tied to React's render cycle, anime.js for explicit timeline sequencing and SVG stroke-drawing, and hand-rolled requestAnimationFrame loops for scroll/drag physics, kept outside both libraries. Every custom animation ships a genuine prefers-reduced-motion fallback.",
+    ],
+  },
+  {
+    slug: "sales-intelligence",
+    name: "Sales Intelligence",
+    category: "Revenue Analytics Platform",
+    status: "LINKEDIN",
+    tagline: "End-to-end analytics platform. Ask questions in plain English, get SQL-backed answers.",
+    description:
+      "Sales Intelligence forecasts revenue and segments customers into AI-driven behavioral personas across a large volume of transactional data, built for teams moving from gut-feel targeting to data-driven prioritization.",
+    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7485029644459479040/",
+    metrics: [
+      { label: "processes", value: "1M+ rows" },
+      { label: "orders analyzed", value: "395K+" },
+      { label: "query", value: "natural language to SQL" },
+    ],
+    stack: ["Next.js", "SQL warehouse", "forecasting models", "LLM query layer"],
+    assetDir: "/assets/salesintel",
+    assets: [
+      "Homepage.png",
+      "dashboard.png",
+      "Forecast.png",
+      "CustomerPersonas.png",
+      "AskYourData.png",
+      "dataset1.png",
+      "dataset2.png",
+    ],
+    details: [
+      "An executive dashboard surfaces revenue trend, order status, and category performance at a glance, backed by a real transactional dataset, not seeded demo data.",
+      "A forecasting module projects revenue forward from trend; a segmentation model clusters customers into behavioral personas the sales team can act on directly.",
+      "The 'Ask Your Data' layer translates plain-English questions into SQL, so a non-technical teammate can query the warehouse an analyst would.",
+    ],
+  },
+  {
+    slug: "daraz-intelligence",
+    name: "Daraz Intelligence",
+    category: "Market Intelligence Platform",
+    status: "LINKEDIN",
+    tagline: "Tracks real-time pricing across e-commerce listings. Flags fake discounts.",
+    description:
+      "Daraz Intelligence is a real-time market analysis tool for e-commerce decision-making. It tracks pricing and listing behavior continuously and flags sellers manufacturing fake discounts.",
+    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7485600716301094912/",
+    metrics: [
+      { label: "tracking", value: "600 products/day" },
+      { label: "caught", value: "47 sellers faking discounts" },
+    ],
+    stack: ["scraping pipeline", "price-history engine", "anomaly detection", "Next.js dashboard"],
+    assetDir: "/assets/daraz",
+    assets: ["home.png", "price_tracker.png", "deals_drops.png", "fake_detector.png", "ai_insights.png"],
+    details: [
+      "A continuous pipeline tracks listing prices per product over time, building a real price history instead of a single snapshot.",
+      "The fake-discount detector compares a listing's 'was' price against its tracked history, flagging discounts that were never real to begin with.",
+      "An AI insights layer surfaces drop patterns and anomalies across the catalog for a pricing team to act on.",
     ],
   },
 ];
@@ -305,7 +359,7 @@ export const serviceCategories: ServiceCategory[] = [
     pitch: "End-to-end product builds on Django/DRF and Next.js, deployed on AWS and Vercel.",
     description:
       "End-to-end product builds: Django/DRF and Next.js/React stacks, stateless or persistent architectures depending on the problem, deployed on AWS (backend) and Vercel (frontend), connected via environment-driven configuration rather than hardcoded hosts. This is the category that underlies every named product on this site: it's the how behind all of them.",
-    proof: ["hos-trip-planner", "swiftdocs"],
+    proof: ["swiftdocs", "hos-trip-planner"],
   },
   {
     slug: "ui-ux-interaction",
@@ -346,42 +400,79 @@ export function getProject(slug: string) {
   return projects.find((p) => p.slug === slug);
 }
 
-export type Problem = {
+/** Projects safe to render anywhere on the public site — excludes in-progress work with no public assets yet. */
+export const visibleProjects = projects.filter((p) => !p.hidden);
+
+/**
+ * The recognition moment: literal situations a business owner has actually
+ * said out loud, taken directly from the agreed positioning
+ * (01-brand-positioning.md, 02-landing-site-plan.md §4). Deliberately three
+ * sentences, not six — each maps 1:1 to a `problemShape` below.
+ */
+export type SoundFamiliarLine = {
   slug: string;
-  title: string;
-  body: string;
+  line: string;
+  shapeSlug: string;
 };
 
-export const problems: Problem[] = [
+export const soundFamiliar: SoundFamiliarLine[] = [
   {
-    slug: "manual-workflows",
-    title: "Manual workflows",
-    body: "Replace repetitive operational work with intelligent automation.",
+    slug: "tracking",
+    line: "Still tracking who owes what in a register?",
+    shapeSlug: "operational-systems",
   },
   {
-    slug: "unstructured-information",
-    title: "Unstructured information",
-    body: "Turn documents and messy data into structured information.",
+    slug: "messages",
+    line: "Answering the same forty WhatsApp messages every day?",
+    shapeSlug: "information-out",
   },
   {
-    slug: "fragmented-operations",
-    title: "Fragmented operations",
-    body: "Connect systems and workflows into coherent applications.",
+    slug: "retyping",
+    line: "Staff retyping invoices into Excel all day?",
+    shapeSlug: "information-in",
+  },
+];
+
+/**
+ * The three problem shapes every offer falls into (01-brand-positioning.md,
+ * "The three problem shapes" / "What this positioning does to the
+ * portfolio"). `proof` lists candidate projects in priority order; the
+ * renderer should pick the first one that isn't `hidden` so this degrades
+ * gracefully while the rent system and AI Inbox Agent are still unreleased.
+ */
+export type ProblemShape = {
+  slug: string;
+  index: string;
+  name: string;
+  ownerLine: string;
+  body: string;
+  proof: string[];
+};
+
+export const problemShapes: ProblemShape[] = [
+  {
+    slug: "information-in",
+    index: "01",
+    name: "Information IN",
+    ownerLine: "My staff types invoices into Excel all day.",
+    body: "Documents, forms, and messages arriving faster than anyone can retype them into the system that actually needs the data.",
+    proof: ["swiftdocs"],
   },
   {
-    slug: "outdated-experiences",
-    title: "Outdated digital experiences",
-    body: "Build modern customer-facing experiences.",
+    slug: "information-out",
+    index: "02",
+    name: "Information OUT",
+    ownerLine: "I answer the same questions every day.",
+    body: "The same handful of questions, answered by hand, over and over, when a system could classify, route, or answer most of them itself.",
+    proof: ["ai-inbox-agent", "clouddesk"],
   },
   {
-    slug: "complex-decisions",
-    title: "Complex decisions",
-    body: "Use rules, data, and AI to support operational decisions.",
-  },
-  {
-    slug: "new-product-ideas",
-    title: "New product ideas",
-    body: "Turn ideas into polished functional products.",
+    slug: "operational-systems",
+    index: "03",
+    name: "Operational systems",
+    ownerLine: "I don't know who owes what or what's due.",
+    body: "A whole business process (rent, orders, inventory) still living in a register or a spreadsheet instead of software built for it.",
+    proof: ["rent-tenant-system", "sales-intelligence", "daraz-intelligence"],
   },
 ];
 
@@ -473,6 +564,6 @@ export const industrySolutions: IndustrySolution[] = [
   {
     slug: "professional-services",
     name: "Professional Services",
-    points: ["Portfolio websites", "Lead capture", "Booking", "Workflow automation"],
+    points: ["Client intake automation", "Lead capture", "Booking", "Workflow automation"],
   },
 ];

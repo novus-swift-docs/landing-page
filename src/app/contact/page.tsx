@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import ContactForm from "@/components/ContactForm";
 import CalendlyEmbed from "@/components/CalendlyEmbed";
+import IconGlyph from "@/components/IconGlyph";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -18,9 +20,12 @@ export default function ContactPage() {
             [ CONTACT ]
           </p>
           <h1 className="display text-[clamp(28px,6vw,48px)] mb-6">Let&apos;s build something real.</h1>
-          <p className="text-[16px] sm:text-[17px]" style={{ color: "var(--muted)" }}>
+          <p className="text-[16px] sm:text-[17px] mb-4" style={{ color: "var(--muted)" }}>
             Send a message, or book a meeting directly. Both reach us, not a queue.
           </p>
+          <Link href="/faq" className="font-mono text-[13px] inline-flex items-center gap-1.5" style={{ color: "var(--signal)" }}>
+            Have a quick question first? Check the FAQ <IconGlyph name="ArrowRight" size={12} weight="bold" aria-hidden="true" />
+          </Link>
         </Reveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-0 mt-20 items-start">

@@ -34,7 +34,7 @@ export default function Testimonials() {
             </p>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <span className="font-display font-semibold text-[15px]">{current.attribution}</span>
-              <span className="text-[13.5px]" style={{ color: "var(--muted)" }}>
+              <span className="text-[14px]" style={{ color: "var(--muted)" }}>
                 {current.role}
               </span>
               <span className="w-1 h-1 rounded-full" style={{ background: "var(--line-strong)" }} aria-hidden="true" />
@@ -82,18 +82,33 @@ export default function Testimonials() {
             lg:overflow-visible already resets both axes back to visible at
             the breakpoint where this becomes a non-scrolling column. */}
         <div className="flex lg:flex-col gap-2 overflow-x-auto overflow-y-hidden lg:overflow-visible pb-1">
-          {testimonials.map((t, i) => (
-            <button
-              key={t.slug}
-              type="button"
-              onClick={() => go(i)}
-              className="shrink-0 text-left font-mono text-[11.5px] min-h-11 flex items-center border-l-2 pl-3 transition-colors cursor-pointer"
-              style={{ borderColor: active === i ? "var(--signal)" : "var(--line)", color: active === i ? "var(--text)" : "var(--muted-dim)" }}
-              aria-pressed={active === i}
-            >
-              {t.project}
-            </button>
-          ))}
+          {testimonials.map((t, i) => {
+            const isActive = active === i;
+            return (
+              <button
+                key={t.slug}
+                type="button"
+                onClick={() => go(i)}
+                className="shrink-0 text-left font-mono text-[12px] min-h-11 flex items-center gap-2 border-l-2 pl-3 pr-3 transition-colors cursor-pointer"
+                style={{
+                  borderColor: isActive ? "var(--signal)" : "var(--line)",
+                  color: isActive ? "var(--text)" : "var(--muted-dim)",
+                  background: isActive ? "rgba(79,193,233,0.08)" : "transparent",
+                  fontWeight: isActive ? 600 : 400,
+                }}
+                aria-pressed={isActive}
+              >
+                {/* A background tint and bolder text alone were too subtle to
+                    register as "this is the one currently shown" (usability
+                    audit finding, Major) — an explicit marker that only
+                    exists in the active state removes the ambiguity. */}
+                {isActive && (
+                  <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "var(--signal)", boxShadow: "0 0 6px var(--signal)" }} aria-hidden="true" />
+                )}
+                {t.project}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

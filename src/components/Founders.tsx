@@ -73,7 +73,7 @@ function FounderProfile({ founder, index }: { founder: Founder; index: number })
             rel="noopener"
             data-track={`founder-linkedin-${founder.initials.toLowerCase()}`}
             data-track-event="linkedin_click"
-            className="inline-flex items-center gap-2 font-mono text-[12.5px]"
+            className="inline-flex items-center gap-2 font-mono text-[13px]"
             style={{ color: "var(--muted-dim)" }}
           >
             <IconGlyph name="LinkedinLogo" size={14} weight="regular" aria-hidden="true" />

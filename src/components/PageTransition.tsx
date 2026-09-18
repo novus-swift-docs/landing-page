@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
@@ -31,17 +31,25 @@ export default function PageTransition({ children }: { children: ReactNode }) {
     return <div key={pathname}>{children}</div>;
   }
 
+  // Enter-only, no AnimatePresence: React's normal key-based swap unmounts
+  // the old page immediately and the new one plays its own fade/slide-in.
+  // The previous version wrapped this in `AnimatePresence mode="wait"`,
+  // which holds the NEW page invisible until the OLD page's exit animation
+  // reports completion first. That completion signal can fail to fire —
+  // fast repeat navigation, a route change while the previous transition
+  // was still mid-flight, framer-motion/React concurrent-rendering timing —
+  // and when it does, `mode="wait"` has nothing to fall back on: the new
+  // page just never gets permission to mount, so the page stays blank until
+  // something else forces a remount. Dropping the exit animation removes
+  // the wait condition entirely, so there's nothing left to get stuck on.
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={pathname}
-        initial={{ opacity: 0, x: offset }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -offset }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      key={pathname}
+      initial={{ opacity: 0, x: offset }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
   );
 }

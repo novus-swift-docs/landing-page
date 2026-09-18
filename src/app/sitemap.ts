@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const BASE_URL = "https://novuslabshq.com";
-const ROUTES = ["", "/services", "/projects", "/about", "/contact"];
+const ROUTES = ["", "/services", "/projects", "/about", "/faq", "/contact", "/privacy", "/terms"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return ROUTES.map((route) => ({

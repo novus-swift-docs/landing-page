@@ -56,8 +56,8 @@ export default function SiteFooter() {
             unwrapped-text width (the classic flex min-content overflow). */}
         <div className="flex flex-nowrap items-center gap-x-3" style={{ gridArea: "logo" }}>
           <Image src="/brand/logo.svg" alt="Novus Labs" width={120} height={87} className="h-9 w-auto shrink-0" />
-          <p className="font-mono text-[11.5px] max-w-[320px] min-w-0" style={{ color: "var(--muted)" }}>
-            Founder-led AI &amp; software engineering studio.
+          <p className="font-mono text-[12px] max-w-[320px] min-w-0" style={{ color: "var(--muted)" }}>
+            Custom software for operations teams.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2" style={{ gridArea: "links" }}>
@@ -83,6 +83,21 @@ export default function SiteFooter() {
           </a>
           <span>ISLAMABAD, PK</span>
         </div>
+      </div>
+
+      {/* Legal sub-row, deliberately its own simple centered flex row rather
+          than a fourth zone folded into the grid above: the three-zone grid's
+          min-[1100px] breakpoint was measured precisely against that grid's
+          own content width (see the block comment above), and adding more
+          text into "meta" would silently invalidate that math. A short,
+          naturally-wrapping row needs no equivalent calculation. */}
+      <div
+        className="container pb-6 flex flex-wrap justify-center items-center gap-x-5 gap-y-2 font-mono text-[11px]"
+        style={{ color: "var(--muted-dim)", borderTop: "1px solid var(--line)", paddingTop: 20 }}
+      >
+        <Link href="/faq" className="hover:[color:var(--signal)] transition-colors">FAQ</Link>
+        <Link href="/privacy" className="hover:[color:var(--signal)] transition-colors">Privacy</Link>
+        <Link href="/terms" className="hover:[color:var(--signal)] transition-colors">Terms</Link>
       </div>
     </footer>
   );

@@ -4,12 +4,14 @@ import Founders from "@/components/Founders";
 import IconGlyph from "@/components/IconGlyph";
 import GlowLink from "@/components/GlowLink";
 import BtnIcon from "@/components/BtnIcon";
+import PipelineViz from "@/components/PipelineViz";
+import EngineeringProcess from "@/components/EngineeringProcess";
 import type { IconName } from "@/lib/iconMap";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Novus Labs is a Pakistan-based AI-integrated software studio: production-first, evidence over claims, run by two FAST-ISB CS students shipping live systems.",
+    "Novus Labs builds custom software for businesses still run on registers, spreadsheets, and WhatsApp: production-first, evidence over claims, run by two FAST-ISB CS students shipping live systems.",
 };
 
 const PILLARS = [
@@ -65,11 +67,13 @@ export default function AboutPage() {
           <p className="annotation mb-5" style={{ color: "var(--signal)" }}>
             [ ABOUT ]
           </p>
-          <h1 className="display text-[clamp(28px,6vw,52px)] mb-8">Production-first, evidence over claims.</h1>
+          <h1 className="display text-[clamp(28px,6vw,48px)] mb-8">Production-first, evidence over claims.</h1>
           <p className="text-[16px] sm:text-[17px] mb-4" style={{ color: "var(--muted)" }}>
-            Novus Labs is a Pakistan-based AI-integrated software studio. We design and ship production AI systems
-            and full-stack products: live deployed tools with real accuracy numbers and real infrastructure behind
-            them, not prototypes built to impress in a single demo.
+            Novus Labs builds the software that replaces a recurring manual process (a rent register, an order
+            inbox, a pile of invoices retyped by hand) for businesses that don&apos;t have an engineering team of
+            their own. AI is how a lot of it gets built; it isn&apos;t the pitch. Every product on this site is a
+            live, deployed system with real infrastructure behind it, not a prototype built to impress in a single
+            demo.
           </p>
           <p className="text-[16px] sm:text-[17px] mb-4" style={{ color: "var(--muted)" }}>
             We work across two motions: building our own product portfolio to demonstrate capability, and custom
@@ -87,8 +91,8 @@ export default function AboutPage() {
 
         <section className="pt-20 pb-4">
           <div className="section-head">
-            <span className="section-tag">01</span>
-            <span className="section-title">Approach</span>
+            <span className="section-tag" aria-hidden="true">01</span>
+            <h2 className="section-title">Approach</h2>
           </div>
           <RevealGroup className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6">
             {PILLARS.map((p) => (
@@ -96,7 +100,7 @@ export default function AboutPage() {
                 <div className="border-l-2 pl-5 h-full" style={{ borderColor: "var(--signal)" }}>
                   <div className="annotation mb-3">{p.tag}</div>
                   <div className="font-display font-semibold text-[17px] mb-2.5">{p.title}</div>
-                  <p className="text-[13.5px] leading-relaxed" style={{ color: "var(--muted)" }}>
+                  <p className="text-[14px] leading-relaxed" style={{ color: "var(--muted)" }}>
                     {p.body}
                   </p>
                 </div>
@@ -107,13 +111,29 @@ export default function AboutPage() {
 
         <section className="pt-20 pb-4">
           <div className="section-head">
-            <span className="section-tag">02</span>
-            <span className="section-title">Capability stack</span>
+            <span className="section-tag" aria-hidden="true">02</span>
+            <h2 className="section-title">How we think</h2>
+          </div>
+          <PipelineViz />
+        </section>
+
+        <section className="pt-20 pb-4">
+          <div className="section-head">
+            <span className="section-tag" aria-hidden="true">03</span>
+            <h2 className="section-title">How we work</h2>
+          </div>
+          <EngineeringProcess />
+        </section>
+
+        <section className="pt-20 pb-4">
+          <div className="section-head">
+            <span className="section-tag" aria-hidden="true">04</span>
+            <h2 className="section-title">Capability stack</h2>
           </div>
           {/* Editorial rows, not a bordered card grid: a numbered hairline
-              row per capability, echoing `.row`/ProblemsSection/
-              ServicesExplorer elsewhere on the site rather than a
-              conventional SaaS feature-card layout. */}
+              row per capability, echoing the `.row` pattern used elsewhere
+              on the site rather than a conventional SaaS feature-card
+              layout. */}
           <RevealGroup>
             {CAPABILITIES.map((c, i) => (
               <RevealItem key={c.title}>
@@ -126,8 +146,8 @@ export default function AboutPage() {
                   </span>
                   <IconGlyph name={c.icon} size={20} color="var(--signal)" weight="regular" aria-hidden="true" className="hidden sm:block" />
                   <div className="min-w-0">
-                    <div className="font-display font-semibold text-[15px] sm:text-[16px] mb-1">{c.title}</div>
-                    <div className="text-[13.5px]" style={{ color: "var(--muted)" }}>
+                    <div className="font-display font-semibold text-[16px] mb-1">{c.title}</div>
+                    <div className="text-[14px]" style={{ color: "var(--muted)" }}>
                       {c.body}
                     </div>
                   </div>
@@ -140,8 +160,8 @@ export default function AboutPage() {
 
         <section className="pt-20 pb-4">
           <div className="section-head">
-            <span className="section-tag">03</span>
-            <span className="section-title">Team</span>
+            <span className="section-tag" aria-hidden="true">05</span>
+            <h2 className="section-title">Team</h2>
           </div>
           <Founders />
         </section>

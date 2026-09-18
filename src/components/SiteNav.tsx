@@ -47,7 +47,7 @@ export default function SiteNav() {
             <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="Novus Labs home">
               <Image src="/brand/logo.svg" alt="Novus Labs" width={160} height={116} className="h-8 sm:h-9 w-auto" priority />
             </Link>
-            <div className="hidden lg:flex items-center gap-1.5 font-mono text-[10.5px] tracking-wide shrink-0" style={{ color: "var(--muted-dim)" }}>
+            <div className="hidden lg:flex items-center gap-1.5 font-mono text-[11px] tracking-wide shrink-0" style={{ color: "var(--muted-dim)" }}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--signal)", boxShadow: "0 0 6px var(--signal)" }} aria-hidden="true" />
               SYSTEMS: OPERATIONAL
             </div>
@@ -62,7 +62,7 @@ export default function SiteNav() {
                   href={l.href}
                   data-track={`nav-${l.label.toLowerCase()}`}
                   data-track-event="navigation_click"
-                  className="group font-mono text-[12.5px] px-2 lg:px-2.5 py-2.5 transition-colors"
+                  className="group font-mono text-[13px] px-2 lg:px-2.5 py-2.5 transition-colors"
                   style={{ color: active ? "var(--signal)" : "var(--muted)" }}
                 >
                   <span className="transition-opacity" style={{ opacity: active ? 1 : 0 }}>
@@ -158,7 +158,7 @@ export default function SiteNav() {
                       data-track={`nav-mobile-${l.label.toLowerCase()}`}
                       data-track-event="navigation_click"
                       className="flex items-center gap-3 px-3.5 py-3.5 transition-colors"
-                      style={{ background: active ? "rgba(79,193,233,0.08)" : "transparent", borderRadius: 4 }}
+                      style={{ background: active ? "rgba(79,193,233,0.08)" : "transparent", borderRadius: 3 }}
                     >
                       <span className="font-mono text-[11px] w-6" style={{ color: active ? "var(--signal)" : "var(--muted-dim)" }}>
                         {String(i + 1).padStart(2, "0")}

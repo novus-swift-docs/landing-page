@@ -33,16 +33,16 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL("https://novuslabshq.com"),
   title: {
-    default: "Novus Labs: AI & Software Engineering Studio",
+    default: "Novus Labs: Custom Software for Manual Operations",
     template: "%s | Novus Labs",
   },
   description:
-    "Novus Labs is a founder-led AI and software engineering studio building custom software, AI-powered workflows, automation, intelligent systems, and digital products engineered for real-world use, not demos.",
+    "Novus Labs builds custom software for businesses still run on registers, spreadsheets, and WhatsApp. A rent system, an order bot, a document pipeline: manual, repetitive work replaced with the software that does it instead.",
   icons: { icon: "/brand/logo.svg" },
   openGraph: {
     type: "website",
-    title: "Novus Labs: AI & Software Engineering Studio",
-    description: "Custom software, AI-powered workflows, and automation, engineered for real-world use.",
+    title: "Novus Labs: Custom Software for Manual Operations",
+    description: "Whatever your team does by hand every day, we build the software that does it instead.",
     url: "https://novuslabshq.com/",
   },
 };
@@ -68,7 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               url: "https://novuslabshq.com",
               logo: "https://novuslabshq.com/brand/logo.svg",
               description:
-                "Founder-led AI and software engineering studio building custom software, AI-powered workflows, and automation.",
+                "Founder-led studio building custom software for businesses still run on registers, spreadsheets, and WhatsApp.",
               sameAs: ["https://www.linkedin.com/company/novus-labs-tech/"],
             }),
           }}

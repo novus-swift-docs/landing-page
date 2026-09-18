@@ -85,6 +85,36 @@
     mask-image:linear-gradient(180deg, transparent 0%, #000 15%, #000 75%, transparent 100%);
   }
 
+  /* Same grid, a taller fade-out zone: the default 75% cutoff is tuned for
+     the tall hero, but the final CTA's box is short enough that its bottom
+     caption line sat inside that fade-out and read as "no grid behind it."
+     Modifier (not a change to `.coord-grid` itself) so the hero's tuning is
+     untouched. */
+  .coord-grid-tall{
+    -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 15%, #000 92%, transparent 100%);
+    mask-image:linear-gradient(180deg, transparent 0%, #000 15%, #000 92%, transparent 100%);
+  }
+
+  /* CTA scanline: a plain CSS keyframe, not a Framer Motion `animate` value,
+     so the loop runs on the browser's own compositor from first paint —
+     immune to React remounts, Strict Mode's double-invoke in dev, and any
+     render-timing race with the mount-gated useReducedMotionSafe() value,
+     all of which could make a JS-driven version of this appear to "randomly"
+     not be running. */
+  .cta-scanline{
+    position:absolute;left:0;right:0;height:1px;pointer-events:none;
+    background:linear-gradient(90deg, transparent, var(--signal), transparent);
+    opacity:0.5;
+    animation:cta-scan 8s linear infinite;
+  }
+  @keyframes cta-scan{
+    0%, 100%{top:10%;}
+    50%{top:90%;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .cta-scanline{animation:none;display:none;}
+  }
+
   /* Small corner tick marks that read as technical annotation on a bounded
      region (a project row, the pipeline capsule). Applied via the four
      ::before/::after-driven corners on `.ticked`. */
@@ -101,7 +131,7 @@
   :focus-visible{
     outline:2px solid var(--signal);
     outline-offset:2px;
-    border-radius:2px;
+    border-radius:3px;
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -164,9 +194,13 @@
     margin-bottom:56px;padding-bottom:20px;
     border-bottom:1px solid var(--line);
   }
+  /* opacity 0.6 (in addition to --line-strong's own baked-in alpha) and a
+     lighter weight than the title next to it: at up to 44px this numeral
+     was competing with the actual heading for attention instead of reading
+     as a quiet page-marker (usability audit finding). */
   .section-head .section-tag{
-    font-family:var(--font-mono);font-size:clamp(28px,5vw,44px);font-weight:600;
-    line-height:1;color:var(--line-strong);flex:none;
+    font-family:var(--font-mono);font-size:clamp(28px,5vw,44px);font-weight:500;
+    line-height:1;color:var(--line-strong);opacity:0.6;flex:none;
   }
   .section-head .section-title{
     font-family:var(--font-display);font-weight:600;letter-spacing:-0.01em;
@@ -189,6 +223,14 @@
      content on the page reading as "a card." */
   .row{border-top:1px solid var(--line);}
   .row:last-child{border-bottom:1px solid var(--line);}
+
+  /* FAQ accordion: native <details>/<summary>, so cross-browser marker
+     removal is required (Firefox honors ::marker, WebKit/Blink still need
+     the legacy pseudo-element) since `list-none` alone only removes it in
+     some browsers. The caret icon rotates on `[open]` instead. */
+  .faq-details summary::-webkit-details-marker{display:none;}
+  .faq-details summary::marker{content:"";}
+  .faq-details[open] .faq-caret{transform:rotate(180deg);}
 
   /* Oversized, low-opacity numeral used for wayfinding behind or beside
      section content (see the redesign brief's "large numbers" technique).
@@ -270,7 +312,7 @@
      content. Padding+negative-margin enlarges the tap target without
      changing the visual gap between dots. */
   .rail-item{display:flex;align-items:center;gap:10px;cursor:pointer;padding:9px;margin:-9px;}
-  .rail-dot{width:6px;height:6px;border-radius:50%;background:var(--line);flex:none;
+  .rail-dot{width:6px;height:6px;border-radius:9999px;background:var(--line);flex:none;
     transition:background 0.3s ease, box-shadow 0.3s ease;}
   .rail-item.active .rail-dot{background:var(--signal);box-shadow:0 0 6px var(--signal);}
   .rail-label{font-family:var(--font-mono);font-size:10.5px;color:var(--muted-dim);
@@ -324,7 +366,7 @@
     letter-spacing:1px;margin-bottom:24px;
     display:flex;align-items:center;gap:8px;
   }
-  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--signal);
+  .eyebrow .dot{width:6px;height:6px;border-radius:9999px;background:var(--signal);
     box-shadow:0 0 6px var(--signal);animation:pulse 2s infinite;}
 
   @media (prefers-reduced-motion: reduce){
@@ -337,13 +379,13 @@
   .custom-cursor-active, .custom-cursor-active *{cursor:none !important;}
   .cursor-dot{
     position:fixed;top:0;left:0;width:6px;height:6px;margin:-3px 0 0 -3px;
-    border-radius:50%;background:var(--signal);
+    border-radius:9999px;background:var(--signal);
     pointer-events:none;z-index:9999;will-change:transform;
     transition:opacity 0.15s ease;
   }
   .cursor-ring{
     position:fixed;top:0;left:0;width:30px;height:30px;margin:-15px 0 0 -15px;
-    border-radius:50%;border:1px solid var(--signal);
+    border-radius:9999px;border:1px solid var(--signal);
     pointer-events:none;z-index:9998;will-change:transform;
     display:flex;align-items:center;justify-content:center;
     transition:width 0.2s ease, height 0.2s ease, margin 0.2s ease, border-color 0.2s ease, opacity 0.15s ease;

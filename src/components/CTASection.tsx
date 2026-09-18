@@ -1,34 +1,25 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import GlowLink from "@/components/GlowLink";
 import BtnIcon from "@/components/BtnIcon";
 import { Reveal } from "@/components/Reveal";
 
 export default function CTASection({
-  heading = "Have a workflow worth improving?",
-  body = "Tell us what you're trying to build, automate, or improve.",
+  heading = "What's eating your team's time every day?",
+  body = "Tell us what you're doing by hand, on repeat, and we'll tell you whether it's worth turning into software.",
   trackPrefix = "cta",
+  note,
 }: {
   heading?: string;
   body?: string;
   trackPrefix?: string;
+  /** A short boundary/trust line rendered beneath the CTAs — e.g. what the studio doesn't do. */
+  note?: string;
 }) {
-  const reduced = useReducedMotionSafe();
-
   return (
     <div className="relative overflow-hidden py-4">
-      <div className="coord-grid" aria-hidden="true" />
-      {!reduced && (
-        <motion.div
-          className="absolute left-0 right-0 h-px pointer-events-none"
-          style={{ background: "linear-gradient(90deg, transparent, var(--signal), transparent)", opacity: 0.5 }}
-          animate={{ top: ["10%", "90%", "10%"] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          aria-hidden="true"
-        />
-      )}
+      <div className="coord-grid coord-grid-tall" aria-hidden="true" />
+      <div className="cta-scanline" aria-hidden="true" />
 
       <Reveal className="text-center max-w-[680px] mx-auto relative">
         <p className="annotation mb-5" style={{ color: "var(--signal)" }}>
@@ -46,6 +37,11 @@ export default function CTASection({
             Book a meeting
           </GlowLink>
         </div>
+        {note && (
+          <p className="font-mono text-[13px] mt-8" style={{ color: "var(--muted-dim)" }}>
+            {note}
+          </p>
+        )}
       </Reveal>
     </div>
   );
