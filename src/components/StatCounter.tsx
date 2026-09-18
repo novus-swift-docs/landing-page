@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 function parseTarget(value: string): { prefix: string; number: number; suffix: string; decimals: number } {
   const match = value.match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);
@@ -15,7 +16,7 @@ function parseTarget(value: string): { prefix: string; number: number; suffix: s
 export default function StatCounter({ value, duration = 1200 }: { value: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const [display, setDisplay] = useState<string>(value);
   const { prefix, number, suffix, decimals } = parseTarget(value);
 

@@ -24,7 +24,7 @@ export const testimonials: Testimonial[] = [
     project: "CloudDesk",
     category: "Support Intelligence Platform",
     quote:
-      "This reduced the time our agents spent manually sorting incoming tickets each day, letting the team focus on resolving issues instead of triaging them first.",
+      "Cloudesk took a lot of the manual work out of ticket triage, so our agents could spend more of their time actually helping customers.",
     attribution: "Daniel",
     role: "Support Operations",
     disclosure: "Anonymized client feedback",
@@ -35,7 +35,7 @@ export const testimonials: Testimonial[] = [
     project: "SwiftDocs",
     category: "AI Document Intelligence",
     quote:
-      "This removed the need for manual data entry on incoming invoices, cutting our processing time and reducing transcription errors across our monthly reconciliation.",
+      "It eliminated the manual data entry we used to deal with on incoming invoices, speeding up our processing and reducing errors during monthly reconciliation.",
     attribution: "Maya",
     role: "Finance Operations",
     disclosure: "Anonymized client feedback",
@@ -45,7 +45,7 @@ export const testimonials: Testimonial[] = [
     project: "Dental Booking Project",
     category: "Dental / Healthcare Booking",
     quote:
-      "This gave our patients a direct way to view services and book appointments online, which noticeably reduced the number of scheduling calls our front desk had to handle.",
+      "This gave our patients an easy way to explore our services and book appointments online, which noticeably reduced the number of scheduling calls coming into the front desk.",
     attribution: "Sophie",
     role: "Practice Operations",
     disclosure: "Anonymized client feedback",
@@ -56,7 +56,7 @@ export const testimonials: Testimonial[] = [
     project: "SoleVault",
     category: "E-commerce Platform",
     quote:
-      "This presented our products with a level of visual polish that matched our brand positioning, and we saw customers spending more time browsing the catalog before checkout.",
+      "Through this our products got the level of visual polish our brand needed, and we noticed customers spending more time exploring the catalog before making a purchase.",
     attribution: "Ethan",
     role: "E-commerce Operations",
     disclosure: "Anonymized client feedback",
@@ -66,7 +66,7 @@ export const testimonials: Testimonial[] = [
     project: "Studio Verai",
     category: "Interior Design / Professional Services",
     quote:
-      "This let prospective clients view our completed work clearly and inquire directly through the site, instead of us relying mostly on social media and word of mouth.",
+      "The website made it much easier for prospective clients to see our completed work and reach out directly, rather than relying mainly on social media and word of mouth.",
     attribution: "Amelia",
     role: "Creative Studio",
     disclosure: "Anonymized client feedback",
@@ -77,7 +77,7 @@ export const testimonials: Testimonial[] = [
     project: "HOS Trip Planner",
     category: "Compliance & Route Planning",
     quote:
-      "This gave our dispatch team a way to plan routes that stayed compliant automatically, instead of manually checking hours-of-service limits for every driver on every trip.",
+      "The tool gave our dispatch team a much easier way to plan compliant routes without manually checking hours-of-service limits for every driver and trip.",
     attribution: "Marcus",
     role: "Dispatch Operations",
     disclosure: "Anonymized client feedback",
@@ -88,9 +88,20 @@ export const testimonials: Testimonial[] = [
     project: "Crown & Craft",
     category: "Barbershop Booking",
     quote:
-      "This gave customers a clear view of our services and pricing before they ever called, and let them book directly online instead of relying on phone calls.",
+      "It gave customers a clear view of our services and pricing before they called, while making it possible for them to book directly online instead of picking up the phone.",
     attribution: "Jordan",
     role: "Barbershop Operations",
     disclosure: "Anonymized client feedback · adapted to protect identity",
+  },
+  {
+    slug: "sales-intelligence",
+    projectSlug: "sales-intelligence",
+    project: "Sales Intelligence",
+    category: "Revenue Analytics Platform",
+    quote:
+      "The tool became a key benefit for our sales team in getting a much clearer view of what was driving revenue, with interactive dashboards, product-level insights, and forecasting that helped us spot trends and plan ahead with more confidence.",
+    attribution: "Grace",
+    role: "Revenue Operations",
+    disclosure: "Anonymized client feedback",
   },
 ];

@@ -16,11 +16,17 @@ export const metadata: Metadata = {
 };
 
 export default function ServicesPage() {
+  // Must match the page's actual render order below (grouped by
+  // SERVICE_GROUPS, not serviceCategories' own 01-08 index order) — the rail
+  // previously used raw serviceCategories order, so its dots didn't line up
+  // top-to-bottom with where sections actually land on the page.
+  const orderedCategories = SERVICE_GROUPS.flatMap((group) => serviceCategories.filter((c) => c.group === group.name));
+
   return (
     <div className="pt-32 pb-24">
-      <SectionRail items={serviceCategories.map((c) => ({ id: c.slug, label: c.tag.replace("$ ", "") }))} />
+      <SectionRail items={orderedCategories.map((c) => ({ id: c.slug, label: c.tag.replace("$ ", "") }))} />
       <div className="container">
-        <Reveal className="max-w-[680px]">
+        <Reveal>
           <p className="annotation mb-5" style={{ color: "var(--signal)" }}>
             [ CAPABILITIES ]
           </p>
@@ -55,7 +61,7 @@ export default function ServicesPage() {
                     <section key={cat.slug} id={cat.slug} className="row py-10 relative" style={{ scrollMarginTop: "90px" }}>
                       <ViewTracker event="service_view" properties={{ service: cat.slug }} label={cat.slug} />
                       <Reveal>
-                        <div className={hasVisual ? "grid lg:grid-cols-[0.55fr_0.45fr] gap-10 pl-0 sm:pl-16" : "max-w-[780px] pl-0 sm:pl-16"}>
+                        <div className={hasVisual ? "grid lg:grid-cols-[0.55fr_0.45fr] gap-10 pl-0 sm:pl-16" : "pl-0 sm:pl-16"}>
                           <div>
                             <div className="flex items-center gap-3 mb-4">
                               <IconGlyph name={CATEGORY_ICON[cat.slug]} size={20} color="var(--signal)" weight="regular" aria-hidden="true" />
@@ -66,7 +72,7 @@ export default function ServicesPage() {
                             <h2 className="font-display font-semibold mb-3.5 leading-snug" style={{ fontSize: "clamp(19px,3vw,25px)" }}>
                               {cat.name}
                             </h2>
-                            <p className={`text-[15px] mb-6 ${hasVisual ? "max-w-[520px]" : ""}`} style={{ color: "var(--muted)" }}>
+                            <p className="text-[15px] mb-6" style={{ color: "var(--muted)" }}>
                               {cat.description}
                             </p>
 

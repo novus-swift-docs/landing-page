@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import IconGlyph from "@/components/IconGlyph";
 import { testimonials } from "@/lib/testimonials";
 import { trackEvent } from "@/lib/analytics";
 
 export default function Testimonials() {
   const [active, setActive] = useState(0);
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const current = testimonials[active];
 
   function go(i: number) {
@@ -28,7 +29,7 @@ export default function Testimonials() {
             exit={reduced ? undefined : { opacity: 0, y: -10 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="display font-medium text-[clamp(22px,3.6vw,36px)] leading-[1.2] mb-8 max-w-[820px]">
+            <p className="display font-medium text-[clamp(22px,3.6vw,36px)] leading-[1.2] mb-8">
               &ldquo;{current.quote}&rdquo;
             </p>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -57,7 +58,7 @@ export default function Testimonials() {
             className="w-11 h-11 border flex items-center justify-center cursor-pointer transition-colors"
             style={{ borderColor: "var(--line)", color: "var(--muted)", borderRadius: 3 }}
           >
-            <ArrowLeft size={14} weight="bold" aria-hidden="true" />
+            <IconGlyph name="ArrowLeft" size={14} weight="bold" aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -66,14 +67,21 @@ export default function Testimonials() {
             className="w-11 h-11 border flex items-center justify-center cursor-pointer transition-colors"
             style={{ borderColor: "var(--line)", color: "var(--muted)", borderRadius: 3 }}
           >
-            <ArrowRight size={14} weight="bold" aria-hidden="true" />
+            <IconGlyph name="ArrowRight" size={14} weight="bold" aria-hidden="true" />
           </button>
           <span className="annotation ml-1">
             {String(active + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
           </span>
         </div>
 
-        <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-1">
+        {/* overflow-y-hidden pairs with overflow-x-auto for the same reason
+            as IndustryRail's tab row: overflow-x set to anything but
+            "visible" while overflow-y stays "visible" computes overflow-y as
+            "auto" too, which can show a phantom vertical scrollbar on this
+            list below lg even though nothing overflows vertically.
+            lg:overflow-visible already resets both axes back to visible at
+            the breakpoint where this becomes a non-scrolling column. */}
+        <div className="flex lg:flex-col gap-2 overflow-x-auto overflow-y-hidden lg:overflow-visible pb-1">
           {testimonials.map((t, i) => (
             <button
               key={t.slug}

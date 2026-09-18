@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import GlowLink from "@/components/GlowLink";
 import BtnIcon from "@/components/BtnIcon";
 import { Reveal } from "@/components/Reveal";
@@ -14,7 +15,7 @@ export default function CTASection({
   body?: string;
   trackPrefix?: string;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
 
   return (
     <div className="relative overflow-hidden py-4">

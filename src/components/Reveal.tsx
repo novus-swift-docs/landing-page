@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 type RevealProps = {
   children: ReactNode;
@@ -12,7 +13,7 @@ type RevealProps = {
 };
 
 export function Reveal({ children, className, delay = 0, y = 16 }: RevealProps) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
 
   if (reduced) {
     return <div className={className}>{children}</div>;
@@ -49,7 +50,7 @@ export const staggerItem: Variants = {
 };
 
 export function RevealGroup({ children, className }: { children: ReactNode; className?: string }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
 
   if (reduced) {
     return <div className={className}>{children}</div>;
@@ -69,7 +70,7 @@ export function RevealGroup({ children, className }: { children: ReactNode; clas
 }
 
 export function RevealItem({ children, className }: { children: ReactNode; className?: string }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
 
   if (reduced) {
     return <div className={className}>{children}</div>;

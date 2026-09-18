@@ -17,7 +17,7 @@ export default function NotFound() {
             Unlike everything else on this site, this route isn&apos;t live in production. Check the URL, or pick a
             page that actually exists.
           </p>
-          <div className="font-mono text-[13px] mb-10 p-4 rounded-md" style={{ background: "var(--bg-raised)", border: "1px solid var(--line)", color: "var(--muted-dim)" }}>
+          <div className="font-mono text-[13px] mb-10 p-4" style={{ background: "var(--bg-raised)", border: "1px solid var(--line)", color: "var(--muted-dim)", borderRadius: 8 }}>
             $ curl novuslabshq.com/…
             <br />
             <span style={{ color: "var(--danger)" }}>404 Not Found</span>

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { X } from "@phosphor-icons/react";
+import IconGlyph from "@/components/IconGlyph";
 
 export default function ScreenshotGallery({ assetDir, assets, name }: { assetDir: string; assets: string[]; name: string }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
@@ -20,8 +20,8 @@ export default function ScreenshotGallery({ assetDir, assets, name }: { assetDir
             key={file}
             type="button"
             onClick={() => setOpenIdx(i)}
-            className="relative aspect-video rounded-md overflow-hidden border cursor-pointer group"
-            style={{ borderColor: "var(--line)", background: "var(--bg-raised)" }}
+            className="relative aspect-video overflow-hidden border cursor-pointer group"
+            style={{ borderRadius: 8, borderColor: "var(--line)", background: "var(--bg-raised)" }}
             aria-label={`View screenshot ${i + 1} of ${name}`}
           >
             <Image
@@ -69,7 +69,7 @@ export default function ScreenshotGallery({ assetDir, assets, name }: { assetDir
               className="absolute top-5 right-5 p-2"
               aria-label="Close screenshot viewer"
             >
-              <X size={26} color="var(--text)" weight="regular" />
+              <IconGlyph name="X" size={26} color="var(--text)" weight="regular" aria-hidden="true" />
             </button>
           </motion.div>
         )}

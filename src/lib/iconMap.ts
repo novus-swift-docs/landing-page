@@ -14,7 +14,13 @@ export type IconName =
   | "PuzzlePiece"
   | "Code"
   | "RocketLaunch"
-  | "TestTube";
+  | "TestTube"
+  | "ArrowLeft"
+  | "ArrowUp"
+  | "ArrowsClockwise"
+  | "CheckCircle"
+  | "WarningCircle"
+  | "X";
 
 export const CATEGORY_ICON: Record<string, IconName> = {
   "automation-agents": "Robot",

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { SERVICE_GROUPS, serviceCategories, getProject } from "@/lib/data";
 import GlowLink from "@/components/GlowLink";
 import IconGlyph from "@/components/IconGlyph";
@@ -10,7 +11,7 @@ import { trackEvent } from "@/lib/analytics";
 
 export default function ServicesExplorer() {
   const [active, setActive] = useState(0);
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const group = SERVICE_GROUPS[active];
   const categoriesInGroup = serviceCategories.filter((c) => c.group === group.name);
 

@@ -88,8 +88,8 @@ export default function CalendlyEmbed() {
     <div ref={containerRef} className="w-full">
       {!scriptLoaded && (
         <div
-          className="w-full rounded-md border animate-pulse"
-          style={{ height: 700, background: "var(--bg-raised)", borderColor: "var(--line)" }}
+          className="w-full border animate-pulse"
+          style={{ height: 700, background: "var(--bg-raised)", borderColor: "var(--line)", borderRadius: 8 }}
           aria-hidden="true"
         />
       )}

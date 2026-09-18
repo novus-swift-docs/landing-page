@@ -61,7 +61,7 @@ export default function AboutPage() {
   return (
     <div className="pt-32 pb-24">
       <div className="container">
-        <Reveal className="max-w-[760px]">
+        <Reveal>
           <p className="annotation mb-5" style={{ color: "var(--signal)" }}>
             [ ABOUT ]
           </p>
@@ -110,15 +110,28 @@ export default function AboutPage() {
             <span className="section-tag">02</span>
             <span className="section-title">Capability stack</span>
           </div>
-          <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {CAPABILITIES.map((c) => (
+          {/* Editorial rows, not a bordered card grid: a numbered hairline
+              row per capability, echoing `.row`/ProblemsSection/
+              ServicesExplorer elsewhere on the site rather than a
+              conventional SaaS feature-card layout. */}
+          <RevealGroup>
+            {CAPABILITIES.map((c, i) => (
               <RevealItem key={c.title}>
-                <GlowLink href={c.href} className="panel p-6 flex flex-col gap-3 h-full transition-colors">
-                  <IconGlyph name={c.icon} size={22} color="var(--signal)" weight="regular" aria-hidden="true" />
-                  <div className="font-display font-semibold text-[15px]">{c.title}</div>
-                  <div className="text-[13.5px]" style={{ color: "var(--muted)" }}>
-                    {c.body}
+                <GlowLink
+                  href={c.href}
+                  className="row grid grid-cols-[40px_1fr_auto] sm:grid-cols-[52px_28px_1fr_auto] items-center gap-x-4 sm:gap-x-6 py-6 transition-colors"
+                >
+                  <span className="font-mono text-[13px]" style={{ color: "var(--line-strong)" }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <IconGlyph name={c.icon} size={20} color="var(--signal)" weight="regular" aria-hidden="true" className="hidden sm:block" />
+                  <div className="min-w-0">
+                    <div className="font-display font-semibold text-[15px] sm:text-[16px] mb-1">{c.title}</div>
+                    <div className="text-[13.5px]" style={{ color: "var(--muted)" }}>
+                      {c.body}
+                    </div>
                   </div>
+                  <IconGlyph name="ArrowUpRight" size={14} color="var(--muted-dim)" weight="bold" aria-hidden="true" className="shrink-0" />
                 </GlowLink>
               </RevealItem>
             ))}

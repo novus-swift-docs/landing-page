@@ -150,9 +150,9 @@
   .nav-offset{top:max(1rem, env(safe-area-inset-top));}
   @media(min-width:640px){.nav-offset{top:max(1.5rem, env(safe-area-inset-top));}}
 
-  .container{max-width:1080px;margin:0 auto;padding:0 40px;}
-  @media(max-width:900px){.container{padding:0 32px;}}
-  @media(max-width:640px){.container{padding:0 20px;}}
+  :root{--content-w:1080px;}
+  @media(min-width:1440px){:root{--content-w:1220px;}}
+  @media(min-width:1680px){:root{--content-w:1360px;}}
 
   /* Editorial section header: a left-aligned oversized index number sitting
      beside a display-face title, closing with one full-width hairline
@@ -237,13 +237,21 @@
     .panel{transition:border-color 0.2s ease, background 0.2s ease;}
   }
 
-  /* cursor-reactive glow: --mx/--my set via onMouseMove in useGlow() */
+  /* cursor-reactive glow: --mx/--my set via onMouseMove in useGlow(). Scoped
+     to `.glow-host` (applied unconditionally by GlowLink itself) rather than
+     only `.panel`/`.btn-primary`, so the shine has a sensible, correctly
+     clipped default everywhere GlowLink is used — including plain inline
+     links that are neither a panel nor a button, where it previously never
+     triggered (gated behind an ancestor class it didn't have) and, had it
+     triggered, would have rendered unclipped against the nearest positioned
+     ancestor instead of the link itself. */
+  .glow-host{position:relative;overflow:hidden;}
   .panel-shine{
     position:absolute;inset:0;pointer-events:none;
     opacity:0;transition:opacity 0.3s ease;
     background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%), rgba(79,193,233,0.16), transparent 70%);
   }
-  .panel:hover .panel-shine{opacity:1;}
+  .panel:hover .panel-shine, .glow-host:hover .panel-shine{opacity:1;}
 
   .stack-badge{transition:border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;}
   .stack-badge:hover{
@@ -349,6 +357,36 @@
   .cursor-crosshair-h{width:9px;height:1px;}
   .cursor-crosshair-v{width:1px;height:9px;}
   .cursor-ring.cursor-hover .cursor-crosshair{opacity:0.7;background:var(--amber);}
+}
+
+/* In @layer utilities, not @layer components: Tailwind ships its own
+   built-in `container` utility (width:100%, max-width locked to each
+   breakpoint's min-width — 640/768/1024/1280/1536) in the utilities layer,
+   and this project's class is unfortunately also literally named
+   "container". Tailwind's utilities layer always beats components
+   regardless of source order or specificity, so a components-layer
+   `.container{max-width:var(--content-w)}` was being silently overridden by
+   Tailwind's own defaults the whole time — this codebase's intended
+   1080/1220/1360px steps were never actually reaching the page. Declaring
+   it here instead, alongside Tailwind's own generated utilities, wins on
+   source order (this file's utilities are emitted after the ones Tailwind
+   generates at the `@import "tailwindcss"` point above). Base width holds
+   the editorial column at a size that keeps rows, grids, and multi-column
+   layouts feeling intentional up through laptop screens; the large-desktop
+   steps widen the frame further so 1440/1680px+ viewports gain real
+   composition instead of idle margin either side of a fixed column. Driven
+   by --content-w (set in @layer components above) rather than .container
+   and .nav-shell each declaring their own max-width, so the fixed nav pill
+   in SiteNav can't silently drift out of sync with the page content width
+   below it again the way it did with a hardcoded max-w-6xl. */
+@layer utilities {
+  .container{max-width:var(--content-w);margin:0 auto;padding-inline:40px;}
+  @media(max-width:900px){.container{padding-inline:32px;}}
+  @media(max-width:640px){.container{padding-inline:20px;}}
+
+  /* Same width steps as .container, no padding of its own (SiteNav's <nav>
+     already carries its own internal px/py for the pill). */
+  .nav-shell{max-width:var(--content-w);}
 }
 
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}

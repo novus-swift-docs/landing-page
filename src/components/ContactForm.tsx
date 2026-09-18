@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, CheckCircle, WarningCircle } from "@phosphor-icons/react";
+import IconGlyph from "@/components/IconGlyph";
 import { useGlow } from "@/hooks/useGlow";
 import { trackEvent, getCurrentIds } from "@/lib/analytics";
 
@@ -99,12 +99,12 @@ export default function ContactForm() {
   if (state === "success") {
     return (
       <div
-        className="rounded-md border p-8 text-center flex flex-col items-center gap-3"
-        style={{ borderColor: "var(--signal)", background: "var(--bg-raised)" }}
+        className="border p-8 text-center flex flex-col items-center gap-3"
+        style={{ borderColor: "var(--signal)", background: "var(--bg-raised)", borderRadius: 8 }}
         role="status"
         aria-live="polite"
       >
-        <CheckCircle size={28} color="var(--signal)" weight="fill" aria-hidden="true" />
+        <IconGlyph name="CheckCircle" size={28} color="var(--signal)" weight="fill" aria-hidden="true" />
         <div className="font-mono text-[15px] font-semibold">Message sent.</div>
         <p className="text-[14px]" style={{ color: "var(--muted)" }}>
           We read every message ourselves and reply directly, usually within a day or two.
@@ -140,8 +140,8 @@ export default function ContactForm() {
             autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="rounded px-3.5 py-2.5 text-[14px] outline-none border transition-colors"
-            style={{ background: "var(--bg-raised)", borderColor: errors.name ? "var(--danger)" : "var(--line)", color: "var(--text)" }}
+            className="px-3.5 py-2.5 text-[14px] outline-none border transition-colors"
+            style={{ background: "var(--bg-raised)", borderColor: errors.name ? "var(--danger)" : "var(--line)", color: "var(--text)", borderRadius: 3 }}
             aria-invalid={!!errors.name}
             aria-describedby="cf-name-error"
           />
@@ -161,8 +161,8 @@ export default function ContactForm() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded px-3.5 py-2.5 text-[14px] outline-none border transition-colors"
-            style={{ background: "var(--bg-raised)", borderColor: errors.email ? "var(--danger)" : "var(--line)", color: "var(--text)" }}
+            className="px-3.5 py-2.5 text-[14px] outline-none border transition-colors"
+            style={{ background: "var(--bg-raised)", borderColor: errors.email ? "var(--danger)" : "var(--line)", color: "var(--text)", borderRadius: 3 }}
             aria-invalid={!!errors.email}
             aria-describedby="cf-email-error"
           />
@@ -182,8 +182,8 @@ export default function ContactForm() {
           autoComplete="organization"
           value={company}
           onChange={(e) => setCompany(e.target.value)}
-          className="rounded px-3.5 py-2.5 text-[14px] outline-none border transition-colors"
-          style={{ background: "var(--bg-raised)", borderColor: "var(--line)", color: "var(--text)" }}
+          className="px-3.5 py-2.5 text-[14px] outline-none border transition-colors"
+          style={{ background: "var(--bg-raised)", borderColor: "var(--line)", color: "var(--text)", borderRadius: 3 }}
         />
       </div>
 
@@ -197,8 +197,8 @@ export default function ContactForm() {
           placeholder="e.g. an internal tool, a customer-facing app, workflow automation"
           value={projectType}
           onChange={(e) => setProjectType(e.target.value)}
-          className="rounded px-3.5 py-2.5 text-[14px] outline-none border transition-colors"
-          style={{ background: "var(--bg-raised)", borderColor: errors.projectType ? "var(--danger)" : "var(--line)", color: "var(--text)" }}
+          className="px-3.5 py-2.5 text-[14px] outline-none border transition-colors"
+          style={{ background: "var(--bg-raised)", borderColor: errors.projectType ? "var(--danger)" : "var(--line)", color: "var(--text)", borderRadius: 3 }}
           aria-invalid={!!errors.projectType}
           aria-describedby="cf-project-error"
         />
@@ -217,8 +217,8 @@ export default function ContactForm() {
           maxLength={2000}
           value={details}
           onChange={(e) => setDetails(e.target.value)}
-          className="rounded px-3.5 py-2.5 text-[14px] outline-none border transition-colors resize-y min-h-[96px]"
-          style={{ background: "var(--bg-raised)", borderColor: "var(--line)", color: "var(--text)" }}
+          className="px-3.5 py-2.5 text-[14px] outline-none border transition-colors resize-y min-h-[96px]"
+          style={{ background: "var(--bg-raised)", borderColor: "var(--line)", color: "var(--text)", borderRadius: 3 }}
         />
         <div className="flex justify-end">
           <div className="font-mono text-[11px]" style={{ color: "var(--muted-dim)" }}>
@@ -229,11 +229,11 @@ export default function ContactForm() {
 
       {state === "error" && (
         <div
-          className="flex items-start gap-2.5 rounded-md border px-3.5 py-3 font-mono text-[12.5px]"
-          style={{ borderColor: "var(--danger)", background: "rgba(229,72,77,0.08)", color: "var(--text)" }}
+          className="flex items-start gap-2.5 border px-3.5 py-3 font-mono text-[12.5px]"
+          style={{ borderColor: "var(--danger)", background: "rgba(229,72,77,0.08)", color: "var(--text)", borderRadius: 8 }}
           role="alert"
         >
-          <WarningCircle size={16} color="var(--danger)" weight="bold" aria-hidden="true" className="mt-0.5 shrink-0" />
+          <IconGlyph name="WarningCircle" size={16} color="var(--danger)" weight="bold" aria-hidden="true" className="mt-0.5 shrink-0" />
           {errorMessage}
         </div>
       )}
@@ -243,7 +243,7 @@ export default function ContactForm() {
         {state === "submitting" ? "Sending…" : "Send message"}
         {state !== "submitting" && (
           <span className="btn-icon-circle">
-            <ArrowRight size={12} weight="bold" aria-hidden="true" />
+            <IconGlyph name="ArrowRight" size={12} weight="bold" aria-hidden="true" />
           </span>
         )}
       </button>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import IconGlyph from "@/components/IconGlyph";
 import type { IconName } from "@/lib/iconMap";
 import { trackEvent } from "@/lib/analytics";
@@ -29,17 +30,28 @@ function NodeButton({
   onSelect: (i: number) => void;
 }) {
   const isActive = active === i;
+  // items-center (not items-start): labels range from "AI" (2 chars) to
+  // "Application" (11), so left-aligning let short labels leave a lot of
+  // visibly unused space to the right of their icon within an equal-width
+  // column while long ones filled theirs — icons read as inconsistently
+  // spaced even though the columns themselves were already equal.
+  // Centering each icon+label as a unit in its column makes every node read
+  // as evenly spaced regardless of label length.
   return (
     <button
       type="button"
       onClick={() => onSelect(i)}
       onFocus={() => onSelect(i)}
       onMouseEnter={() => onSelect(i)}
-      className="flex flex-col items-start gap-3 px-1 cursor-pointer group text-left w-full"
+      className="flex flex-col items-center gap-3 px-1 cursor-pointer group text-center w-full"
       aria-pressed={isActive}
       aria-label={`${stage.label}: ${stage.body}`}
     >
-      <span className="font-mono text-[11px]" style={{ color: isActive ? "var(--signal)" : "var(--line-strong)" }}>
+      {/* Fixed height (not the font's organic line-height) so the connector
+          rail below can sit at a deterministic offset — index row + gap-3 +
+          icon height — instead of an empirically-guessed pixel value that
+          only happened to roughly land inside the icon tile. */}
+      <span className="font-mono text-[11px] h-4 flex items-center" style={{ color: isActive ? "var(--signal)" : "var(--line-strong)" }}>
         {String(i + 1).padStart(2, "0")}
       </span>
       <span
@@ -70,7 +82,7 @@ function NodeButton({
  * hover/focus/tap takes over and pauses the cycle.
  */
 export default function PipelineViz() {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const hasInteracted = useRef(false);
@@ -101,10 +113,12 @@ export default function PipelineViz() {
       </div>
 
       <div className="hidden sm:grid relative" style={{ gridTemplateColumns: `repeat(${STAGES.length}, minmax(0, 1fr))` }}>
-        {/* Connector rail: one continuous line under the icon row, with a
-            signal pulse that fills up to the active stage. Positioned to
-            align with the icon tiles (fixed offset from the top). */}
-        <div className="absolute left-0 right-0 h-px" style={{ top: 39, background: "var(--line)" }} aria-hidden="true">
+        {/* Connector rail: one continuous line under the icon row (not
+            through it), with a signal pulse that fills up to the active
+            stage. top:68 = 16 (index row, h-4) + 12 (gap-3) + 40 (icon tile,
+            h-10) — the icon tiles' exact bottom edge, deterministic rather
+            than a guessed value that landed partway up through the icons. */}
+        <div className="absolute left-0 right-0 h-px" style={{ top: 120, background: "var(--line)" }} aria-hidden="true">
           {!reduced && (
             <motion.div
               className="h-full origin-left"
@@ -114,8 +128,15 @@ export default function PipelineViz() {
             />
           )}
         </div>
+        {/* Uniform px-2 on every column (not first:pl-0 last:pr-0): that
+            asymmetric edge padding was tuned for left-aligned content, where
+            it let the first/last icons sit flush with the row's true edges.
+            With icons now centered in their column, the same asymmetry
+            would nudge just the first and last icons off-center relative to
+            the other four — same padding everywhere keeps every icon
+            centered identically in its own column. */}
         {STAGES.map((stage, i) => (
-          <div key={stage.key} className="px-2 first:pl-0 last:pr-0">
+          <div key={stage.key} className="px-2">
             <NodeButton stage={stage} i={i} active={active} onSelect={selectStage} />
           </div>
         ))}

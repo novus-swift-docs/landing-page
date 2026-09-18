@@ -35,6 +35,13 @@ let sessionId = "";
 let visitorId = "";
 let sessionStartedAt = 0;
 let initialized = false;
+// Resolves once the visitor/session rows this tick's events will reference
+// (via FK) are actually committed. `AnalyticsProvider` mounts and fires its
+// page-view/scroll/click effects in the same tick as `initAnalytics()`, so
+// without this gate, the very first `trackEvent` calls raced the in-flight
+// visitor/session inserts and failed with a foreign-key violation on every
+// fresh visitor — see `trackEvent` below.
+let readyPromise: Promise<void> | null = null;
 const scrollMilestonesSeenByPath = new Map<string, Set<number>>();
 
 function nowIso() {
@@ -65,40 +72,42 @@ export function initAnalytics(): void {
   const firstTouch = getOrSetFirstTouchAttribution();
   const currentTouch = resolveCurrentAttribution();
 
-  upsertVisitor({
-    visitor_id: visitorId,
-    first_seen_at: nowIso(),
-    last_seen_at: nowIso(),
-    session_count: isNew ? 1 : 0, // dashboard sums session rows for a true count; this is a best-effort hint only.
-    first_referrer: firstTouch.referrer,
-    latest_referrer: currentTouch.referrer,
-    first_landing_page: firstTouch.landingPage,
-    latest_landing_page: currentTouch.landingPage,
-    source: firstTouch.source,
-    medium: firstTouch.medium,
-    campaign: firstTouch.campaign,
-    device_category: getDeviceCategory(),
-    browser: getBrowser(),
-    os: getOS(),
-  });
-
-  if (isNew) {
-    insertSession({
-      session_id: sessionId,
+  readyPromise = (async () => {
+    await upsertVisitor({
       visitor_id: visitorId,
-      started_at: nowIso(),
-      ended_at: null,
-      duration_seconds: null,
-      landing_page: currentTouch.landingPage,
-      exit_page: null,
-      referrer: currentTouch.referrer,
-      source: currentTouch.source,
-      medium: currentTouch.medium,
-      campaign: currentTouch.campaign,
+      first_seen_at: nowIso(),
+      last_seen_at: nowIso(),
+      session_count: isNew ? 1 : 0, // dashboard sums session rows for a true count; this is a best-effort hint only.
+      first_referrer: firstTouch.referrer,
+      latest_referrer: currentTouch.referrer,
+      first_landing_page: firstTouch.landingPage,
+      latest_landing_page: currentTouch.landingPage,
+      source: firstTouch.source,
+      medium: firstTouch.medium,
+      campaign: firstTouch.campaign,
       device_category: getDeviceCategory(),
+      browser: getBrowser(),
+      os: getOS(),
     });
-    trackEvent("session_start", { source: currentTouch.source });
-  }
+
+    if (isNew) {
+      await insertSession({
+        session_id: sessionId,
+        visitor_id: visitorId,
+        started_at: nowIso(),
+        ended_at: null,
+        duration_seconds: null,
+        landing_page: currentTouch.landingPage,
+        exit_page: null,
+        referrer: currentTouch.referrer,
+        source: currentTouch.source,
+        medium: currentTouch.medium,
+        campaign: currentTouch.campaign,
+        device_category: getDeviceCategory(),
+      });
+      trackEvent("session_start", { source: currentTouch.source });
+    }
+  })();
 
   window.addEventListener("visibilitychange", handleVisibilityChange);
   window.addEventListener("pagehide", flushSessionEnd);
@@ -123,17 +132,25 @@ export function trackPageview(path: string): void {
 
 export function trackEvent(name: AnalyticsEvent, properties?: EventProperties, elementInfo?: { id?: string; label?: string }): void {
   if (typeof window === "undefined" || !initialized) return;
-  touchSession();
-  insertEvent({
-    visitor_id: visitorId,
-    session_id: sessionId,
-    event_name: name,
-    page_path: window.location.pathname,
-    element_id: elementInfo?.id ?? null,
-    element_label: elementInfo?.label ?? null,
-    event_properties: properties ?? null,
-    occurred_at: nowIso(),
-  });
+
+  const send = () => {
+    touchSession();
+    insertEvent({
+      visitor_id: visitorId,
+      session_id: sessionId,
+      event_name: name,
+      page_path: window.location.pathname,
+      element_id: elementInfo?.id ?? null,
+      element_label: elementInfo?.label ?? null,
+      event_properties: properties ?? null,
+      occurred_at: nowIso(),
+    });
+  };
+
+  // Queue behind the in-flight visitor/session inserts instead of racing
+  // them — see `readyPromise`'s definition above.
+  if (readyPromise) void readyPromise.then(send);
+  else send();
 }
 
 const SCROLL_MILESTONES = [25, 50, 75, 90, 100];

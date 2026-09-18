@@ -1,8 +1,9 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 const NAV_ORDER = ["/", "/services", "/projects", "/about", "/contact"];
 
@@ -13,7 +14,7 @@ function indexFor(pathname: string) {
 
 export default function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   // Direction depends on comparing this navigation's index to the previous
   // one, which is "adjusting state when a prop changes" — computed during
   // render (React's own recommended pattern for this) rather than read from

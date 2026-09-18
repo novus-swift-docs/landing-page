@@ -21,9 +21,19 @@ export default function SectionRail({ items }: { items: RailItem[] }) {
   function computeActive() {
     const scrollPos = window.scrollY + 140;
     let current = items[0]?.id;
+    // Track the largest qualifying offsetTop seen, not just the last item in
+    // `items` order — `items` is ordered by category group (services page)
+    // rather than by where each section actually lands in the DOM, so a
+    // later-in-array section with a smaller offsetTop was unconditionally
+    // overwriting an already-correct, further-scrolled-into section, making
+    // several dots never activate at all no matter how the page was scrolled.
+    let bestOffset = -Infinity;
     for (const item of items) {
       const el = document.getElementById(item.id);
-      if (el && el.offsetTop <= scrollPos) current = item.id;
+      if (el && el.offsetTop <= scrollPos && el.offsetTop > bestOffset) {
+        bestOffset = el.offsetTop;
+        current = item.id;
+      }
     }
     return current;
   }

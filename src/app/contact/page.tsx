@@ -13,7 +13,7 @@ export default function ContactPage() {
   return (
     <div className="pt-32 pb-24">
       <div className="container">
-        <Reveal className="max-w-[680px]">
+        <Reveal>
           <p className="annotation mb-5" style={{ color: "var(--signal)" }}>
             [ CONTACT ]
           </p>

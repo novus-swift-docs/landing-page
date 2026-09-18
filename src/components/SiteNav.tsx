@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { LinkedinLogo } from "@phosphor-icons/react";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import IconGlyph from "@/components/IconGlyph";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -17,7 +18,7 @@ const NAV_LINKS = [
 
 export default function SiteNav() {
   const pathname = usePathname();
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const [open, setOpen] = useState(false);
   const [prevPathname, setPrevPathname] = useState(pathname);
   if (pathname !== prevPathname) {
@@ -39,7 +40,7 @@ export default function SiteNav() {
           status header rather than generic marketing chrome. */}
       <div className="nav-offset fixed left-0 w-full z-[99] px-4 sm:px-6 flex justify-center">
         <nav
-          className="w-full max-w-6xl flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border backdrop-blur-md"
+          className="nav-shell w-full flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border backdrop-blur-md"
           style={{ background: "rgba(8,19,25,0.82)", borderColor: "var(--line)", borderRadius: 8 }}
         >
           <div className="flex items-center gap-4 sm:gap-6 min-w-0">
@@ -76,7 +77,12 @@ export default function SiteNav() {
             })}
           </div>
 
-          <div className="hidden lg:flex items-center gap-2.5 shrink-0">
+          {/* CTA appears as soon as the mobile menu is gone (md, 768px) so
+              there's never a range with neither — the LinkedIn icon only
+              rejoins it once there's more room (lg, 1024px). Previously both
+              were `lg:flex` while the hamburger was `md:hidden`, leaving no
+              way to reach the primary CTA between 768–1023px. */}
+          <div className="hidden md:flex items-center gap-2.5 shrink-0">
             <a
               href="https://www.linkedin.com/company/novus-labs-tech/"
               target="_blank"
@@ -84,10 +90,10 @@ export default function SiteNav() {
               aria-label="Novus Labs on LinkedIn"
               data-track="nav-linkedin"
               data-track-event="linkedin_click"
-              className="flex w-9 h-9 border items-center justify-center transition-colors"
+              className="hidden lg:flex w-9 h-9 border items-center justify-center transition-colors"
               style={{ borderColor: "var(--line)", color: "var(--muted)", borderRadius: 3 }}
             >
-              <LinkedinLogo size={14} weight="regular" aria-hidden="true" />
+              <IconGlyph name="LinkedinLogo" size={14} weight="regular" aria-hidden="true" />
             </a>
             <Link href="/contact#message" data-track="nav-discuss-project" className="btn btn-primary !py-2.5 !px-4 !text-[12px]">
               Discuss a project
@@ -181,7 +187,7 @@ export default function SiteNav() {
                   className="flex items-center justify-center gap-2 px-5 py-3 font-mono text-[13px]"
                   style={{ color: "var(--muted)" }}
                 >
-                  <LinkedinLogo size={15} weight="regular" aria-hidden="true" />
+                  <IconGlyph name="LinkedinLogo" size={15} weight="regular" aria-hidden="true" />
                   LinkedIn
                 </a>
               </div>

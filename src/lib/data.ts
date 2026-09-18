@@ -105,8 +105,8 @@ export const projects: Project[] = [
     linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7485029644459479040/",
     metrics: [
       { label: "processes", value: "1M+ rows" },
-      { label: "total revenue tracked", value: "PKR 1.60bn" },
-      { label: "orders analyzed", value: "395,806" },
+      { label: "total revenue tracked", value: "PKR 1.6B+" },
+      { label: "orders analyzed", value: "395K+" },
       { label: "query", value: "natural language to SQL" },
     ],
     stack: ["Next.js", "SQL warehouse", "forecasting models", "LLM query layer"],
@@ -221,26 +221,15 @@ export const projects: Project[] = [
       "Framer Motion for anything tied to React's render cycle, anime.js for explicit timeline sequencing and SVG stroke-drawing, and hand-rolled requestAnimationFrame loops for scroll/drag physics, kept outside both libraries. Every custom animation ships a genuine prefers-reduced-motion fallback.",
     ],
   },
-  {
-    slug: "crown-craft",
-    name: "Crown & Craft",
-    category: "Barbershop Booking",
-    status: "SHOWCASE",
-    tagline: "Premium barbershop concept: services, pricing, booking flow, and team presentation.",
-    description:
-      "Premium barbershop website concept featuring services, pricing, booking flow, and team presentation. A prototype/demo build exploring booking UX for personal-service businesses, not a verified public client engagement.",
-    publicUrl: "https://crowncraft.vercel.app",
-    confidentialityNote: "Prototype / demo concept.",
-    metrics: [],
-    stack: ["Next.js", "Tailwind CSS", "Framer Motion"],
-    assetDir: "/assets/crowncraft",
-    assets: [],
-    details: [
-      "A full booking flow (services → barber → time slot → confirmation) built to explore how a personal-services business can move phone-call scheduling online.",
-      "Pricing and service menus are presented as first-class content, not an afterthought footnote, so a visitor can decide before they ever have to call.",
-    ],
-  },
 ];
+
+/**
+ * Crown & Craft is deliberately not listed here: it's a prototype/demo
+ * concept, not a public case study. Its genuine testimonial still appears in
+ * lib/testimonials.ts — public Projects and client testimonials are tracked
+ * independently, since a testimonial can be real even when the underlying
+ * work isn't publicly showcased.
+ */
 
 export type ServiceGroup = "Intelligent Systems" | "Software Products" | "Data & Operations" | "Experience";
 

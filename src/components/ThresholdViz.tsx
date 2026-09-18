@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { animate } from "animejs";
 
 const THRESHOLDS = [
@@ -17,7 +18,7 @@ export default function ThresholdViz() {
   const ref = useRef<HTMLDivElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const [hit, setHit] = useState(false);
   const played = useRef(false);
 

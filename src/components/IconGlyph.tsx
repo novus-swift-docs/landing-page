@@ -17,6 +17,12 @@ import {
   Code,
   RocketLaunch,
   TestTube,
+  ArrowLeft,
+  ArrowUp,
+  ArrowsClockwise,
+  CheckCircle,
+  WarningCircle,
+  X,
   type IconProps,
 } from "@phosphor-icons/react";
 import type { IconName } from "@/lib/iconMap";
@@ -38,6 +44,12 @@ const REGISTRY = {
   Code,
   RocketLaunch,
   TestTube,
+  ArrowLeft,
+  ArrowUp,
+  ArrowsClockwise,
+  CheckCircle,
+  WarningCircle,
+  X,
 } as const;
 
 export default function IconGlyph({ name, ...props }: { name: IconName } & IconProps) {

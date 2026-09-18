@@ -5,7 +5,7 @@ export default function ProblemsSection() {
   return (
     <div>
       <Reveal>
-        <p className="display text-[clamp(22px,4vw,38px)] max-w-[720px] mb-16">
+        <p className="display text-[clamp(22px,4vw,38px)] mb-16">
           Most software problems don&apos;t start with software.
         </p>
       </Reveal>

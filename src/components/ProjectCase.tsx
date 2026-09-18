@@ -31,7 +31,7 @@ export default function ProjectCase({ project, index }: { project: Project; inde
 
   return (
     <section ref={sectionRef} id={project.slug} className="row py-16 sm:py-20" style={{ scrollMarginTop: "90px" }}>
-      <Reveal className="max-w-[900px]">
+      <Reveal>
         <div className="grid grid-cols-[60px_1fr] sm:grid-cols-[100px_1fr] gap-x-4">
           <span className="ghost-num text-[40px] sm:text-[64px]">{String(index + 1).padStart(2, "0")}</span>
           <div>

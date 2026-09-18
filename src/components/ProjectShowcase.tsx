@@ -61,7 +61,7 @@ function ShowcaseRow({ project, index }: { project: Project; index: number }) {
           </div>
 
           <h3 className="display font-semibold text-[clamp(28px,4.2vw,44px)] mb-4">{project.name}</h3>
-          <p className="text-[15.5px] sm:text-[16px] mb-6 max-w-[520px]" style={{ color: "var(--muted)" }}>
+          <p className="text-[15.5px] sm:text-[16px] mb-6" style={{ color: "var(--muted)" }}>
             {project.description}
           </p>
 

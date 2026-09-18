@@ -42,32 +42,64 @@ async function safeWrite(fn: (db: SupabaseClient) => PromiseLike<unknown>): Prom
   }
 }
 
-export function upsertVisitor(row: VisitorRow): void {
-  void safeWrite((db) =>
-    db.from("visitors").upsert(
-      {
-        visitor_id: row.visitor_id,
-        first_seen_at: row.first_seen_at,
+/**
+ * Plain INSERT, falling back to a plain UPDATE on a duplicate key — not
+ * `.upsert()`/`ON CONFLICT DO UPDATE`. Postgres RLS requires SELECT
+ * privilege on the table to evaluate the conflict target for an
+ * `INSERT ... ON CONFLICT DO UPDATE`, even though the row itself is only
+ * ever inserted or updated — but `visitors` deliberately has no SELECT
+ * policy for `anon` (see the migration's comment: visitors can write their
+ * own row but never read any row back, including their own). Under that
+ * policy set, `.upsert()` fails every single call with "new row violates
+ * row-level security policy," which silently swallows every visitor
+ * row (`safeWrite` never surfaces the error). Two separate statements route
+ * around the implicit SELECT entirely: INSERT only needs its WITH CHECK,
+ * and UPDATE only needs its USING/WITH CHECK — neither needs SELECT.
+ *
+ * The UPDATE path also intentionally omits first_seen_at/first_referrer/
+ * first_landing_page/source/medium/campaign/session_count — those are
+ * first-touch attribution and a first-insert-only hint (see VisitorRow),
+ * and must never be overwritten by a later visit.
+ */
+export function upsertVisitor(row: VisitorRow): Promise<void> {
+  return safeWrite(async (db) => {
+    const { error } = await db.from("visitors").insert({
+      visitor_id: row.visitor_id,
+      first_seen_at: row.first_seen_at,
+      last_seen_at: row.last_seen_at,
+      session_count: row.session_count,
+      first_referrer: row.first_referrer,
+      latest_referrer: row.latest_referrer,
+      first_landing_page: row.first_landing_page,
+      latest_landing_page: row.latest_landing_page,
+      source: row.source,
+      medium: row.medium,
+      campaign: row.campaign,
+      device_category: row.device_category,
+      browser: row.browser,
+      os: row.os,
+    });
+
+    if (!error) return;
+    if (error.code !== "23505") throw error;
+
+    const { error: updateError } = await db
+      .from("visitors")
+      .update({
         last_seen_at: row.last_seen_at,
-        session_count: row.session_count,
-        first_referrer: row.first_referrer,
         latest_referrer: row.latest_referrer,
-        first_landing_page: row.first_landing_page,
         latest_landing_page: row.latest_landing_page,
-        source: row.source,
-        medium: row.medium,
-        campaign: row.campaign,
         device_category: row.device_category,
         browser: row.browser,
         os: row.os,
-      },
-      { onConflict: "visitor_id" }
-    )
-  );
+      })
+      .eq("visitor_id", row.visitor_id);
+    if (updateError) throw updateError;
+  });
 }
 
-export function insertSession(row: SessionRow): void {
-  void safeWrite((db) => db.from("sessions").insert(row));
+export function insertSession(row: SessionRow): Promise<void> {
+  return safeWrite((db) => db.from("sessions").insert(row));
 }
 
 export function updateSessionEnd(sessionId: string, endedAt: string, durationSeconds: number, exitPage: string): void {

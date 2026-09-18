@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUp } from "@phosphor-icons/react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import IconGlyph from "@/components/IconGlyph";
 
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
 
   useEffect(() => {
     function onScroll() {
@@ -37,7 +38,7 @@ export default function BackToTop() {
           onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--signal)")}
           onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--line)")}
         >
-          <ArrowUp size={16} color="var(--signal)" weight="bold" aria-hidden="true" />
+          <IconGlyph name="ArrowUp" size={16} color="var(--signal)" weight="bold" aria-hidden="true" />
         </motion.button>
       )}
     </AnimatePresence>
